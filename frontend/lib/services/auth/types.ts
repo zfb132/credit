@@ -42,7 +42,7 @@ export interface User {
   trust_level: TrustLevel;
   /** 头像 URL */
   avatar_url: string;
-  /** 支付评分 */
+  /** 支付分数 */
   pay_score: number;
   /** 总余额 */
   total_balance: number;

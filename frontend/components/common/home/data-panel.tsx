@@ -2,6 +2,7 @@
 
 import { Area, AreaChart, XAxis, YAxis } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { useUser } from "@/contexts/user-context"
 
 const chartData = [
   { date: "10-28", total: 0 },
@@ -23,6 +24,11 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function DataPanel() {
+  const { user, loading } = useUser()
+
+  const availableBalance = user?.available_balance ?? 0
+  const remainQuota = user?.remain_quota ?? 0
+
   return (
     <div>
       <div className="grid grid-cols-3 gap-12">
@@ -83,13 +89,17 @@ export function DataPanel() {
         
         <div className="col-span-1 flex flex-col">
           <div className="flex-1 border-b pb-4">
-            <div className="text-sm text-muted-foreground font-medium">Linux Do Credit</div>
-            <div>—</div>
+            <div className="text-sm text-muted-foreground font-medium">LINUX DO 积分</div>
+            <div className="text-xl font-semibold">
+              {loading ? '-' : availableBalance.toFixed(2)}
+            </div>
           </div>
           
           <div className="flex-1 pt-4">
             <div className="text-sm text-muted-foreground font-medium">今日剩余额度</div>
-            <div>—</div>
+            <div className="text-xl font-semibold">
+              {loading ? '-' : remainQuota.toFixed(2)}
+            </div>
           </div>
         </div>
       </div>

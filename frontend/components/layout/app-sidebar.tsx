@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   BarChart3,
   Home,
@@ -13,6 +13,9 @@ import {
   CircleDollarSign,
   LogOut,
   Store,
+  ChevronDown,
+  UserRound,
+  FileQuestionMark,
 } from "lucide-react"
 import { AnimateIcon } from "@/components/animate-ui/icons/icon"
 import { ChevronLeft } from "@/components/animate-ui/icons/chevron-left"
@@ -35,6 +38,14 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -89,18 +100,6 @@ const data = {
       icon: BarChart3,
     },
   ],
-  settings: [
-    {
-      title: "设置",
-      url: "#",
-      icon: Settings,
-    },
-    {
-      title: "登出",
-      url: "#",
-      icon: LogOut,
-    },
-  ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -108,6 +107,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user, getTrustLevelLabel, logout } = useUser()
   const [showLogoutDialog, setShowLogoutDialog] = React.useState(false)
   const pathname = usePathname()
+  const router = useRouter()
   
   return (
     <>
@@ -129,26 +129,72 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}
       </Button>
       
-      <SidebarHeader className="py-4">
-        <div className="flex items-center gap-2 px-1 h-12">
-          <Avatar className="size-6 rounded group-data-[collapsible=icon]">
-            <AvatarImage
-              src={user?.avatar_url}
-              alt={user?.nickname}
-            />
-            <AvatarFallback className="rounded bg-muted text-sm">
-              {user?.nickname?.charAt(0)?.toUpperCase() || "L"}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-xs font-medium truncate">
-              {user?.nickname || user?.username || "Unknown User"}
-            </span>
-            <span className="text-[11px] font-medium text-muted-foreground/100 truncate">
-              {user ? getTrustLevelLabel(user.trust_level) : "Trust Level Unknown"}
-            </span>
-          </div>
-        </div>
+      <SidebarHeader className="py-4 -ml-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="ghost" 
+              className="flex h-12 hover:bg-accent group-data-[collapsible=icon]"
+            >
+              <Avatar className="size-6 rounded">
+                <AvatarImage
+                  src={user?.avatar_url}
+                  alt={user?.nickname}
+                />
+                <AvatarFallback className="rounded bg-muted text-sm">
+                  {user?.nickname?.charAt(0)?.toUpperCase() || "L"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col items-start flex-1 text-left group-data-[collapsible=icon]:hidden">
+                <span className="text-xs font-medium truncate w-full text-left">
+                  {user?.nickname || user?.username || "Unknown User"}
+                </span>
+                <span className="text-[11px] font-medium text-muted-foreground/100 truncate w-full text-left">
+                  {user ? getTrustLevelLabel(user.trust_level) : "Trust Level Unknown"}
+                </span>
+              </div>
+              <ChevronDown className="size-4 text-muted-foreground ml-auto group-data-[collapsible=icon]:hidden" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-64 space-y-2" align="start" side="bottom" sideOffset={4}>
+            <DropdownMenuLabel>
+              <div className="flex flex-col items-center gap-2">
+                <Avatar className="size-12 rounded">
+                  <AvatarImage
+                    src={user?.avatar_url}
+                    alt={user?.nickname}
+                  />
+                  <AvatarFallback className="rounded bg-muted text-lg">
+                    {user?.nickname?.charAt(0)?.toUpperCase() || "L"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-base font-semibold truncate">
+                  {user?.nickname || user?.username || "Unknown User"}
+                </span>
+                <span className="text-xs font-base text-muted-foreground">
+                  {user ? getTrustLevelLabel(user.trust_level) : "Trust Level Unknown"}
+                </span>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => router.push("/settings/profile")}>
+              <UserRound className="mr-2 size-4" />
+              <span>我的资料</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/settings")}>
+              <Settings className="mr-2 size-4" />
+              <span>设置</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="my-2"/>
+            <DropdownMenuItem>
+              <FileQuestionMark className="mr-2 size-4" />
+              <span>使用帮助</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive hover:bg-destructive/50" onClick={() => setShowLogoutDialog(true)}>
+              <LogOut className="mr-2 size-4 text-destructive" />
+              <span>退出登录</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarHeader>
       <SidebarContent className="group-data-[collapsible=icon]">
         <SidebarGroup className="py-0">
@@ -211,34 +257,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                     </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup className="mt-auto py-0 pb-2">
-          <SidebarGroupContent className="py-1">
-            <SidebarMenu className="gap-1">
-              {data.settings.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton 
-                    tooltip={item.title}
-                    asChild={item.title !== "登出"}
-                    onClick={item.title === "登出" ? () => setShowLogoutDialog(true) : undefined}
-                  >
-                    {item.title === "登出" ? (
-                      <>
-                        {item.icon && <item.icon />}
-                        <span>{item.title}</span>
-                      </>
-                    ) : (
-                      <Link href={item.url}>
-                        {item.icon && <item.icon />}
-                        <span>{item.title}</span>
-                      </Link>
-                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
