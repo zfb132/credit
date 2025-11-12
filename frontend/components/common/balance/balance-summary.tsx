@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { useUser } from "@/contexts/user-context"
+import { CountingNumber } from "@/components/animate-ui/primitives/texts/counting-number"
 
 interface BalanceSummaryProps {
   /** 货币单位 */
@@ -34,8 +35,6 @@ export function BalanceSummary({ currency = "LDC" }: BalanceSummaryProps) {
 
   return (
     <div className="space-y-4">
-      <div className="font-semibold">余额摘要</div>
-
       <div className="w-full h-4 bg-gray-100 dark:bg-gray-800 rounded-sm overflow-hidden flex">
         <div
           className="bg-[#6366F1]/80 transition-all duration-300"
@@ -60,7 +59,7 @@ export function BalanceSummary({ currency = "LDC" }: BalanceSummaryProps) {
             <div className="size-3 bg-[#6366F1]/80 rounded-xs" />
             <span>可用</span>
           </div>
-          <span>{loading ? '-' : `${currency} ${available.toFixed(2)}`}</span>
+          <span>{loading ? '-' : <CountingNumber number={available} decimalPlaces={2} />}</span>
         </div>
 
         <div className="flex justify-between items-center font-bold text-sm pb-2 border-b border-border/50">
@@ -68,7 +67,7 @@ export function BalanceSummary({ currency = "LDC" }: BalanceSummaryProps) {
             <div className="size-3 bg-gray-400/80 rounded-xs" />
             <span>未来款项</span>
           </div>
-          <span>{loading ? '-' : `${currency} ${pending.toFixed(2)}`}</span>
+          <span>{loading ? '-' : <CountingNumber number={pending} decimalPlaces={2} />}</span>
         </div>
       </div>
     </div>

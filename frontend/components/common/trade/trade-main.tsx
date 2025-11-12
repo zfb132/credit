@@ -19,13 +19,11 @@ type TabValue = 'receive' | 'payment' | 'transfer' | 'community' | 'all'
 export function TradeMain() {
   const [activeTab, setActiveTab] = useState<TabValue>('receive')
 
-  // 将tab值转换为OrderType
   const getOrderType = (tab: TabValue): OrderType | undefined => {
     if (tab === 'all') return undefined
     return tab as OrderType
   }
 
-  // 根据当前tab渲染对应的页面内容
   const renderPageContent = () => {
     switch (activeTab) {
       case 'receive':
@@ -45,39 +43,24 @@ export function TradeMain() {
 
   return (
     <TransactionProvider defaultParams={{ page_size: 20 }}>
-      <div className="py-6 space-y-0">
-        {/* 标题部分 */}
-        <div className="pb-2">
-          <h1 className="text-2xl font-semibold">交易</h1>
-        </div>
+      <div className="py-6">
+        <h1 className="pb-2 text-2xl font-semibold">交易</h1>
 
-        {/* 标签导航 */}
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)} className="w-full">
           <div>
-            <TabsList className="flex p-0 gap-4 rounded-none w-full bg-transparent justify-start border-b border-border">
-              <TabsTrigger value="receive" className={TAB_TRIGGER_STYLES}>
-                收款
-              </TabsTrigger>
-              <TabsTrigger value="payment" className={TAB_TRIGGER_STYLES}>
-                付款
-              </TabsTrigger>
-              <TabsTrigger value="transfer" className={TAB_TRIGGER_STYLES}>
-                转账
-              </TabsTrigger>
-              <TabsTrigger value="community" className={TAB_TRIGGER_STYLES}>
-                社区划转
-              </TabsTrigger>
-              <TabsTrigger value="all" className={TAB_TRIGGER_STYLES}>
-                所有活动
-              </TabsTrigger>
+            <TabsList className="w-full">
+              <TabsTrigger value="receive" className={TAB_TRIGGER_STYLES}>收款</TabsTrigger>
+              <TabsTrigger value="payment" className={TAB_TRIGGER_STYLES}>付款</TabsTrigger>
+              <TabsTrigger value="transfer" className={TAB_TRIGGER_STYLES}>转账</TabsTrigger>
+              <TabsTrigger value="community" className={TAB_TRIGGER_STYLES}>社区划转</TabsTrigger>
+              <TabsTrigger value="all" className={TAB_TRIGGER_STYLES}>所有活动</TabsTrigger>
             </TabsList>
           </div>
 
-          <div>
-            {renderPageContent()}
-            
-            <TradeTable type={getOrderType(activeTab)} />
-          </div>
+          <div className="pt-2">{renderPageContent()}</div>
+
+          <div className="font-semibold pt-6 pb-2">交易记录</div>
+          <TradeTable type={getOrderType(activeTab)} />
         </Tabs>
       </div>
     </TransactionProvider>

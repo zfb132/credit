@@ -113,14 +113,14 @@ export function ErrorInline({
 
   return (
     <div className={cn("flex items-center gap-2 text-sm text-red-600 dark:text-red-400", className)}>
-      <AlertCircle className="size-6 shrink-0" />
+      <AlertCircle className="size-4 shrink-0" />
       <span className="flex-1">{errorMessage}</span>
       {onRetry && (
         <Button 
           onClick={onRetry} 
-          variant="ghost" 
+          variant="secondary" 
           size="sm"
-          className="h-6 px-2 text-xs"
+          className="h-6 px-4 text-xs"
         >
           重试
         </Button>

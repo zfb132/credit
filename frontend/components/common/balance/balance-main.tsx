@@ -5,6 +5,7 @@ import { useUser } from "@/contexts/user-context"
 import { BalanceSummary } from "./balance-summary"
 import { BalanceTable } from "./balance-table"
 import { BalanceReport } from "./balance-report"
+import { CountingNumber } from "@/components/animate-ui/primitives/texts/counting-number"
 
 /**
  * 余额主页面组件
@@ -21,19 +22,26 @@ export function BalanceMain() {
   const totalBalance = user?.total_balance ?? 0
 
   return (
-    <div className="py-6 space-y-4">
-      <div className="flex items-center gap-2 border-b border-border pb-4">
+    <div className="py-6">
+      <div className="flex items-center gap-2 border-b border-border pb-2">
         <h1 className="text-2xl">
           <span className="font-semibold">余额</span>
           <span className="pl-2">LDC</span>
-          <span className="pl-2">{loading ? '-' : totalBalance.toFixed(2)}</span>
+          <span className="pl-2">{loading ? '-' : <CountingNumber number={totalBalance} decimalPlaces={2} />}</span>
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-        <div className="lg:col-span-3 space-y-4">
-          <BalanceSummary currency="LDC" />
-          <BalanceTable />
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 pt-4">
+        <div className="lg:col-span-3 space-y-12">
+          <div>
+            <div className="font-semibold mb-4">余额摘要</div>
+            <BalanceSummary currency="LDC" />
+          </div>
+
+          <div>
+            <div className="font-semibold mb-4">近期活动</div>
+            <BalanceTable />
+          </div>
         </div>
 
         <div className="lg:col-span-1">

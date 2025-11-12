@@ -10,7 +10,6 @@ import { ExternalLink, Info, Eye, EyeOff } from "lucide-react"
 import { format } from "date-fns"
 import { zhCN } from "date-fns/locale"
 
-// 模拟图表数据
 const chartData = [
   { date: "10-31", value: 0 },
   { date: "11-01", value: 0 },
@@ -28,7 +27,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-// 付款卡片
+/**
+ * 付款卡片
+ * 
+ * @returns {React.ReactNode} 付款卡片
+ */
 function PaymentCard() {
   const [isHidden, setIsHidden] = React.useState(false)
 
@@ -71,7 +74,6 @@ function PaymentCard() {
           </div>
         </div>
         
-        {/* 毛玻璃遮罩 */}
         {isHidden && (
           <div className="absolute inset-0 backdrop-blur-md bg-background/30 rounded-lg flex items-center justify-center">
             <EyeOff className="h-8 w-8 text-muted-foreground/50" />
@@ -82,8 +84,15 @@ function PaymentCard() {
   )
 }
 
-// 总额卡片（带图表）
-function TotalCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
+/**
+ * 总额卡片（带图表）
+ * @param {Object} props - 组件属性
+ * @param {Object} props.dateRange - 日期范围
+ * @param {Date} props.dateRange.from - 开始日期
+ * @param {Date} props.dateRange.to - 结束日期
+ * @returns {React.ReactNode} 总额卡片
+ */
+function TotalCard({ dateRange }: { dateRange: { from: Date; to: Date } | null }) {
   return (
     <Card className="bg-background border-0 shadow-none rounded-lg">
       <CardHeader>
@@ -122,8 +131,14 @@ function TotalCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
           </AreaChart>
         </ChartContainer>
         <div className="flex items-center justify-between text-xs text-muted-foreground mt-2 pt-2 border-t">
-          <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
-          <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+          {dateRange ? (
+            <>
+              <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
+              <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+            </>
+          ) : (
+            <span className="w-full text-center">所有时间</span>
+          )}
         </div>
         <div className="flex items-center justify-between mt-2">
           <span className="text-xs text-muted-foreground">更新时间：上午12:29</span>
@@ -136,8 +151,15 @@ function TotalCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
   )
 }
 
-// 净交易额卡片
-function NetVolumeCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
+/**
+ * 净交易额卡片
+ * @param {Object} props - 组件属性
+ * @param {Object} props.dateRange - 日期范围
+ * @param {Date} props.dateRange.from - 开始日期
+ * @param {Date} props.dateRange.to - 结束日期
+ * @returns {React.ReactNode} 净交易额卡片
+ */
+function NetVolumeCard({ dateRange }: { dateRange: { from: Date; to: Date } | null }) {
   return (
     <Card className="bg-background border-0 shadow-none rounded-lg">
       <CardHeader>
@@ -176,8 +198,14 @@ function NetVolumeCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
           </AreaChart>
         </ChartContainer>
         <div className="flex items-center justify-between text-xs text-muted-foreground mt-2 pt-2 border-t">
-          <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
-          <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+          {dateRange ? (
+            <>
+              <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
+              <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+            </>
+          ) : (
+            <span className="w-full text-center">所有时间</span>
+          )}
         </div>
         <div className="flex items-center justify-between mt-2">
           <span className="text-xs text-muted-foreground">更新时间：上午12:29</span>
@@ -190,7 +218,10 @@ function NetVolumeCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
   )
 }
 
-// 支出最多的客户卡片
+/**
+ * 支出最多的客户卡片
+ * @returns {React.ReactNode} 支出最多的客户卡片
+ */
 function TopCustomersCard() {
   return (
     <Card className="bg-background border-0 shadow-none rounded-lg">
@@ -213,8 +244,15 @@ function TopCustomersCard() {
   )
 }
 
-// 失败的付款卡片
-function FailedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
+/**
+ * 失败的付款卡片
+ * @param {Object} props - 组件属性
+ * @param {Object} props.dateRange - 日期范围
+ * @param {Date} props.dateRange.from - 开始日期
+ * @param {Date} props.dateRange.to - 结束日期
+ * @returns {React.ReactNode} 失败的付款卡片
+ */
+function FailedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date } | null }) {
   return (
     <Card className="bg-background border-0 shadow-none rounded-lg">
       <CardHeader>
@@ -248,8 +286,14 @@ function FailedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date }
           </AreaChart>
         </ChartContainer>
         <div className="flex items-center justify-between text-xs text-muted-foreground mt-2 pt-2 border-t">
-          <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
-          <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+          {dateRange ? (
+            <>
+              <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
+              <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+            </>
+          ) : (
+            <span className="w-full text-center">所有时间</span>
+          )}
         </div>
         <div className="flex items-center justify-between mt-2">
           <span className="text-xs text-muted-foreground">更新时间：上午12:29</span>
@@ -262,8 +306,15 @@ function FailedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date }
   )
 }
 
-// 有争议的付款卡片
-function DisputedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date } }) {
+/**
+ * 有争议的付款卡片
+ * @param {Object} props - 组件属性
+ * @param {Object} props.dateRange - 日期范围
+ * @param {Date} props.dateRange.from - 开始日期
+ * @param {Date} props.dateRange.to - 结束日期
+ * @returns {React.ReactNode} 有争议的付款卡片
+ */
+function DisputedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date } | null }) {
   return (
     <Card className="bg-background border-0 shadow-none rounded-lg">
       <CardHeader>
@@ -297,8 +348,14 @@ function DisputedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date
           </AreaChart>
         </ChartContainer>
         <div className="flex items-center justify-between text-xs text-muted-foreground mt-2 pt-2 border-t">
-          <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
-          <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+          {dateRange ? (
+            <>
+              <span>{format(dateRange.from, "MM月dd日", { locale: zhCN })}</span>
+              <span>{format(dateRange.to, "MM月dd日", { locale: zhCN })}</span>
+            </>
+          ) : (
+            <span className="w-full text-center">所有时间</span>
+          )}
         </div>
         <div className="flex items-center justify-between mt-2">
           <span className="text-xs text-muted-foreground">更新时间：上午12:29</span>
@@ -311,8 +368,16 @@ function DisputedPaymentsCard({ dateRange }: { dateRange: { from: Date; to: Date
   )
 }
 
+/**
+ * 概览面板组件
+ * @param {Object} props - 组件属性
+ * @param {Object} props.dateRange - 日期范围
+ * @param {Date} props.dateRange.from - 开始日期
+ * @param {Date} props.dateRange.to - 结束日期
+ * @returns {React.ReactNode} 概览面板组件
+ */
 interface OverviewPanelProps {
-  dateRange: { from: Date; to: Date }
+  dateRange: { from: Date; to: Date } | null
 }
 
 export function OverviewPanel({ dateRange }: OverviewPanelProps) {

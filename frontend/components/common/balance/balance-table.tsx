@@ -48,8 +48,6 @@ export function BalanceTable() {
 
   return (
     <div>
-      <div className="font-semibold py-4">近期活动</div>
-
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as OrderType | 'all')} className="w-full">
         <TabsList className="flex p-0 gap-4 rounded-none w-full bg-transparent justify-start border-b border-border">
           <TabsTrigger value="receive" className={TAB_TRIGGER_STYLES}>

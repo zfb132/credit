@@ -2,6 +2,8 @@
 
 import { Area, AreaChart, XAxis, YAxis } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { CountingNumber } from '@/components/animate-ui/primitives/texts/counting-number';
+
 import { useUser } from "@/contexts/user-context"
 
 const chartData = [
@@ -23,6 +25,10 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
+/**
+ * 数据面板组件
+ * @returns {React.ReactNode} 数据面板组件
+ */
 export function DataPanel() {
   const { user, loading } = useUser()
 
@@ -33,11 +39,9 @@ export function DataPanel() {
     <div>
       <div className="grid grid-cols-3 gap-12">
         <div className="col-span-2">
-          <div className="mb-2">
-            <h3 className="text-sm text-muted-foreground font-medium">总额</h3>
-          </div>
+          <h3 className="text-sm text-muted-foreground font-medium">总额</h3>
           
-          <ChartContainer config={chartConfig} className="h-[180px] w-full">
+          <ChartContainer config={chartConfig} className=" w-full h-[240px]">
             <AreaChart
               data={chartData}
               margin={{
@@ -90,15 +94,15 @@ export function DataPanel() {
         <div className="col-span-1 flex flex-col">
           <div className="flex-1 border-b pb-4">
             <div className="text-sm text-muted-foreground font-medium">LINUX DO 积分</div>
-            <div className="text-xl font-semibold">
-              {loading ? '-' : availableBalance.toFixed(2)}
+            <div className="text-xl font-semibold pt-2">
+              {loading ? '-' : <CountingNumber number={availableBalance} decimalPlaces={2} />}
             </div>
           </div>
           
           <div className="flex-1 pt-4">
             <div className="text-sm text-muted-foreground font-medium">今日剩余额度</div>
-            <div className="text-xl font-semibold">
-              {loading ? '-' : remainQuota.toFixed(2)}
+            <div className="text-xl font-semibold pt-2">
+              {loading ? '-' : <CountingNumber number={remainQuota} decimalPlaces={2} />}
             </div>
           </div>
         </div>
