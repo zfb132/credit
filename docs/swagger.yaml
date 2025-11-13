@@ -137,6 +137,14 @@ definitions:
     required:
     - value
     type: object
+  user.UpdatePayKeyRequest:
+    properties:
+      pay_key:
+        maxLength: 10
+        type: string
+    required:
+    - pay_key
+    type: object
   user_pay_config.CreateUserPayConfigRequest:
     properties:
       daily_limit:
@@ -591,4 +599,24 @@ paths:
             $ref: '#/definitions/util.ResponseAny'
       tags:
       - order
+  /api/v1/user/pay-key:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.UpdatePayKeyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/util.ResponseAny'
+      tags:
+      - user
 swagger: "2.0"

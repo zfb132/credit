@@ -44,6 +44,7 @@ import (
 	"github.com/linux-do/pay/internal/apps/merchant"
 	"github.com/linux-do/pay/internal/apps/oauth"
 	"github.com/linux-do/pay/internal/apps/order"
+	"github.com/linux-do/pay/internal/apps/user"
 	"github.com/linux-do/pay/internal/config"
 	"github.com/linux-do/pay/internal/otel_trace"
 	swaggerFiles "github.com/swaggo/files"
@@ -108,6 +109,13 @@ func Serve() {
 			apiV1Router.GET("/oauth/logout", oauth.LoginRequired(), oauth.Logout)
 			apiV1Router.POST("/oauth/callback", oauth.Callback)
 			apiV1Router.GET("/oauth/user-info", oauth.LoginRequired(), oauth.UserInfo)
+
+			// User
+			userRouter := apiV1Router.Group("/user")
+			userRouter.Use(oauth.LoginRequired())
+			{
+				userRouter.PUT("/pay-key", user.UpdatePayKey)
+			}
 
 			// Order
 			orderRouter := apiV1Router.Group("/order")

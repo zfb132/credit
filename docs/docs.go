@@ -661,6 +661,38 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/user/pay-key": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.UpdatePayKeyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/util.ResponseAny"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -852,6 +884,18 @@ const docTemplate = `{
                 "value": {
                     "type": "string",
                     "maxLength": 255
+                }
+            }
+        },
+        "user.UpdatePayKeyRequest": {
+            "type": "object",
+            "required": [
+                "pay_key"
+            ],
+            "properties": {
+                "pay_key": {
+                    "type": "string",
+                    "maxLength": 10
                 }
             }
         },
