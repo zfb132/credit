@@ -18,6 +18,7 @@ interface UserState {
  */
 interface UserContextValue extends UserState {
   refetch: () => Promise<void>
+  updatePayKey: (payKey: string) => Promise<void>
   getTrustLevelLabel: (trustLevel: TrustLevel) => string
   getPayLevelLabel: (payLevel: PayLevel) => string
   logout: () => Promise<void>
@@ -95,6 +96,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   /**
+   * 更新支付密码
+   */
+  const updatePayKey = async (payKey: string) => {
+    await services.user.updatePayKey(payKey)
+    // 更新后重新获取用户信息，确保is_pay_key状态更新
+    await fetchUser()
+  }
+
+  /**
    * 用户登出
    */
   const logout = async () => {
@@ -121,6 +131,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       value={{
         ...state,
         refetch,
+        updatePayKey,
         getTrustLevelLabel,
         getPayLevelLabel,
         logout,

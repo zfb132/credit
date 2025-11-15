@@ -84,3 +84,65 @@ export interface PayMerchantOrderRequest {
   order_no: string;
 }
 
+/**
+ * 查询商户订单请求参数
+ */
+export interface GetMerchantOrderRequest {
+  /** 订单号（加密后的订单ID） */
+  order_no: string;
+}
+
+/**
+ * 查询商户订单响应
+ */
+export interface GetMerchantOrderResponse {
+  /** 订单信息 */
+  order: {
+    /** 订单ID */
+    id: number;
+    /** 订单号 */
+    order_no: string;
+    /** 订单名称 */
+    order_name: string;
+    /** 付款方用户名 */
+    payer_username: string;
+    /** 收款方用户名 */
+    payee_username: string;
+    /** 交易金额 */
+    amount: string;
+    /** 订单状态 */
+    status: string;
+    /** 订单类型 */
+    type: string;
+    /** 备注 */
+    remark: string;
+    /** 客户端ID */
+    client_id: string;
+    /** 交易时间 */
+    trade_time: string | null;
+    /** 创建时间 */
+    created_at: string;
+    /** 更新时间 */
+    updated_at: string;
+  };
+  /** 用户支付配置信息 */
+  user_pay_config: {
+    /** 配置ID */
+    id: number;
+    /** 支付等级 */
+    level: number;
+    /** 最低分数 */
+    min_score: number;
+    /** 最高分数 */
+    max_score: number | null;
+    /** 每日限额 */
+    daily_limit: number | null;
+    /** 手续费率 */
+    fee_rate: string;
+    /** 创建时间 */
+    created_at: string;
+    /** 更新时间 */
+    updated_at: string;
+  };
+}
+

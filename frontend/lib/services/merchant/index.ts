@@ -40,5 +40,7 @@ export type {
   CreateMerchantOrderRequest,
   CreateMerchantOrderResponse,
   PayMerchantOrderRequest,
+  GetMerchantOrderRequest,
+  GetMerchantOrderResponse,
 } from './types';
 

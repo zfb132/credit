@@ -6,6 +6,8 @@ import type {
   CreateMerchantOrderRequest,
   CreateMerchantOrderResponse,
   PayMerchantOrderRequest,
+  GetMerchantOrderRequest,
+  GetMerchantOrderResponse,
 } from './types';
 
 /**
@@ -170,25 +172,64 @@ export class MerchantService extends BaseService {
   }
 
   /**
+   * 查询商户订单信息
+   *
+   * @description
+   * 查询商户创建的订单详细信息，用于支付页面显示订单信息。
+   * 订单必须处于待支付状态。
+   *
+   * @param request - 查询订单请求参数
+   * @returns 订单信息和用户支付配置
+   * @throws {UnauthorizedError} 当用户未登录时
+   * @throws {NotFoundError} 当订单不存在时
+   * @throws {ValidationError} 当订单号格式错误时
+   * @throws {ApiErrorBase} 当订单已过期或已支付等业务错误时
+   *
+   * @example
+   * ```typescript
+   * // 从 URL 获取订单号
+   * const params = new URLSearchParams(window.location.search);
+   * const orderNo = params.get('order_no');
+   *
+   * if (orderNo) {
+   *   try {
+   *     const orderInfo = await MerchantService.getMerchantOrder({ order_no: orderNo });
+   *     console.log('订单信息:', orderInfo.order);
+   *     console.log('支付配置:', orderInfo.user_pay_config);
+   *   } catch (error) {
+   *     console.error('查询订单失败:', error.message);
+   *   }
+   * }
+   * ```
+   *
+   * @remarks
+   * - 订单必须处于待支付状态
+   * - 返回的用户支付配置包含手续费率等信息
+   */
+  static async getMerchantOrder(request: GetMerchantOrderRequest): Promise<GetMerchantOrderResponse> {
+    return this.get<GetMerchantOrderResponse>('/payment/order', { order_no: request.order_no });
+  }
+
+  /**
    * 支付商户订单
-   * 
+   *
    * @description
    * 用户使用此接口支付商户创建的订单。
    * 需要用户登录，并且用户余额充足。
-   * 
+   *
    * @param request - 支付订单请求参数
    * @returns void
    * @throws {UnauthorizedError} 当用户未登录时
    * @throws {NotFoundError} 当订单不存在或已过期时
    * @throws {ValidationError} 当订单号格式错误时
    * @throws {ApiErrorBase} 当余额不足、订单已支付等业务错误时
-   * 
+   *
    * @example
    * ```typescript
    * // 从 URL 获取订单号
    * const params = new URLSearchParams(window.location.search);
    * const orderNo = params.get('order_no');
-   * 
+   *
    * if (orderNo) {
    *   try {
    *     await MerchantService.payMerchantOrder({ order_no: orderNo });
@@ -199,7 +240,7 @@ export class MerchantService extends BaseService {
    *   }
    * }
    * ```
-   * 
+   *
    * @remarks
    * - 用户不能支付自己作为商户创建的订单
    * - 订单必须在有效期内（5分钟）

@@ -20,18 +20,26 @@ lib/services/
 │   ├── errors.ts           # 错误类型定义
 │   ├── types.ts            # 核心类型定义
 │   └── index.ts            # 导出核心模块
+├── admin/                  # 管理员服务
+│   ├── types.ts            # 管理员相关类型
+│   ├── admin.service.ts    # 管理员服务实现
+│   └── index.ts            # 导出管理员服务
 ├── auth/                   # 认证服务
 │   ├── types.ts            # 认证相关类型
 │   ├── auth.service.ts     # 认证服务实现
 │   └── index.ts            # 导出认证服务
-├── transaction/            # 交易服务
-│   ├── types.ts            # 交易相关类型
-│   ├── transaction.service.ts  # 交易服务实现
-│   └── index.ts            # 导出交易服务
 ├── merchant/               # 商户服务
 │   ├── types.ts            # 商户相关类型
 │   ├── merchant.service.ts # 商户服务实现
 │   └── index.ts            # 导出商户服务
+├── transaction/            # 交易服务
+│   ├── types.ts            # 交易相关类型
+│   ├── transaction.service.ts  # 交易服务实现
+│   └── index.ts            # 导出交易服务
+├── user/                   # 用户服务
+│   ├── types.ts            # 用户相关类型
+│   ├── user.service.ts     # 用户服务实现
+│   └── index.ts            # 导出用户服务
 ├── index.ts                # 服务层统一入口
 └── README.md               # 文档
 ```
@@ -107,14 +115,41 @@ const newKey = await services.merchant.createAPIKey({
   app_homepage_url: 'https://example.com',
   redirect_uri: 'https://example.com/callback'
 });
+
+// 创建商户订单（需要商户凭证）
+const order = await services.merchant.createMerchantOrder(
+  {
+    order_name: '商品购买',
+    amount: 99.99,
+    remark: '订单备注'
+  },
+  'client_id',
+  'client_secret'
+);
+
+// 查询商户订单信息
+const orderInfo = await services.merchant.getMerchantOrder({ order_no: 'order_no_123' });
+console.log('订单信息:', orderInfo.order);
+console.log('支付配置:', orderInfo.user_pay_config);
+
+// 支付商户订单
+await services.merchant.payMerchantOrder({ order_no: 'order_no_123' });
+
+// 调用管理员服务（需要管理员权限）
+const systemConfigs = await services.admin.listSystemConfigs();
+const payConfigs = await services.admin.listUserPayConfigs();
+
+// 调用用户服务
+await services.user.updatePayKey('123456');
 ```
 
 ### 2. 按需导入：直接导入特定服务
 
 ```typescript
-import { AuthService } from '@/lib/services';
+import { AdminService, UserService } from '@/lib/services';
 
-const user = await AuthService.getCurrentUser();
+const configs = await AdminService.listSystemConfigs();
+await UserService.updatePayKey('123456');
 ```
 
 ### 3. 错误处理
@@ -168,6 +203,69 @@ class UserService extends BaseService {
     return this.get('/');
   }
 }
+```
+
+## 服务模块说明
+
+### AdminService - 管理员服务
+
+处理系统配置和用户支付配置管理相关的 API 请求。
+
+**主要接口：**
+- 系统配置 CRUD 操作
+- 用户支付配置 CRUD 操作
+
+**权限要求：** 需要管理员权限
+
+**使用示例：**
+```typescript
+import services from '@/lib/services';
+
+// 获取系统配置列表
+const configs = await services.admin.listSystemConfigs();
+
+// 创建系统配置
+await services.admin.createSystemConfig({
+  key: 'app.version',
+  value: '1.0.0',
+  description: '应用版本'
+});
+
+// 更新系统配置
+await services.admin.updateSystemConfig('app.version', {
+  value: '1.1.0',
+  description: '更新版本'
+});
+
+// 删除系统配置
+await services.admin.deleteSystemConfig('app.version');
+
+// 用户支付配置管理
+const payConfigs = await services.admin.listUserPayConfigs();
+const newConfig = await services.admin.createUserPayConfig({
+  level: PayLevel.Premium,
+  min_score: 1000,
+  max_score: null,
+  daily_limit: 100000,
+  fee_rate: 0.01
+});
+```
+
+### UserService - 用户服务
+
+处理用户个人设置相关的 API 请求。
+
+**主要接口：**
+- 更新用户支付密钥
+
+**权限要求：** 需要登录
+
+**使用示例：**
+```typescript
+import services from '@/lib/services';
+
+// 更新支付密钥（6位数字）
+await services.user.updatePayKey('123456');
 ```
 
 ## 创建新服务
@@ -389,11 +487,11 @@ const orders = await services.order.getAll();
 
 ❌ **避免**：混用两种方式
 ```typescript
-import services, { AuthService } from '@/lib/services';
+import services, { AdminService } from '@/lib/services';
 
 // 不要混用
-const user = await services.auth.getCurrentUser();
-const profile = await AuthService.getProfile(); // 不推荐
+const configs = await services.admin.listSystemConfigs();
+const profile = await AdminService.getSystemConfig('app.name'); // 不推荐
 ```
 
 ## 注意事项
@@ -406,3 +504,5 @@ const profile = await AuthService.getProfile(); // 不推荐
 6. **统一错误处理** - 使用 `errors.ts` 中定义的错误类型
 7. **环境变量** - 使用 `NEXT_PUBLIC_API_URL` 配置 API 地址
 8. **请求取消** - 在适当的时机取消不需要的请求
+9. **服务完整性** - 前端服务层已完整实现所有业务接口
+   - `GET /api/v1/health` - 健康检查（通常不需要前端调用）
