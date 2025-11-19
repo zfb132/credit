@@ -28,9 +28,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/hibiken/asynq"
 	"github.com/linux-do/pay/internal/db"
 	"github.com/linux-do/pay/internal/logger"
@@ -115,7 +117,7 @@ func doOAuth(ctx context.Context, code string) (*model.User, error) {
 
 	// save to db
 	var user model.User
-	tx := db.DB(ctx).Where("id = ?", userInfo.Id).First(&user)
+	tx := db.DB(ctx).Where("username = ?", userInfo.Username).First(&user)
 	if tx.Error != nil {
 		// create user
 		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
@@ -135,7 +137,6 @@ func doOAuth(ctx context.Context, code string) (*model.User, error) {
 				return nil, tx.Error
 			}
 
-			// 为新注册用户下发计算徽章分数的任务
 			payload, _ := json.Marshal(map[string]interface{}{
 				"user_id": user.ID,
 			})
@@ -151,22 +152,62 @@ func doOAuth(ctx context.Context, code string) (*model.User, error) {
 			return nil, tx.Error
 		}
 	} else {
-		if !user.IsActive {
-			err = errors.New(BannedAccount)
-			span.SetStatus(codes.Error, err.Error())
-			return nil, err
-		}
-		// update user
-		user.Username = userInfo.Username
-		user.Nickname = userInfo.Name
-		user.AvatarUrl = userInfo.AvatarUrl
-		user.IsActive = userInfo.Active
-		user.TrustLevel = userInfo.TrustLevel
-		user.LastLoginAt = time.Now()
-		tx = db.DB(ctx).Save(&user)
-		if tx.Error != nil {
-			span.SetStatus(codes.Error, tx.Error.Error())
-			return nil, tx.Error
+		if user.ID != userInfo.Id {
+			err = db.DB(ctx).Transaction(func(tx *gorm.DB) error {
+				oldUsername := fmt.Sprintf("%s已注销: %s", user.Username, uuid.NewString())
+				if errUpdate := tx.Model(&user).Updates(map[string]interface{}{
+					"username":  oldUsername,
+					"is_active": false,
+				}).Error; errUpdate != nil {
+					return errUpdate
+				}
+				// create user
+				user = model.User{
+					ID:          userInfo.Id,
+					Username:    userInfo.Username,
+					Nickname:    userInfo.Name,
+					AvatarUrl:   userInfo.AvatarUrl,
+					IsActive:    userInfo.Active,
+					TrustLevel:  userInfo.TrustLevel,
+					LastLoginAt: time.Now(),
+				}
+				if errCreate := tx.Create(&user).Error; errCreate != nil {
+					return errCreate
+				}
+				return nil
+			})
+			if err != nil {
+				span.SetStatus(codes.Error, err.Error())
+				return nil, err
+			}
+
+			payload, _ := json.Marshal(map[string]interface{}{
+				"user_id": user.ID,
+			})
+
+			if _, errTask := schedule.AsynqClient.Enqueue(asynq.NewTask(task.UpdateSingleUserGamificationScoreTask, payload)); errTask != nil {
+				logger.ErrorF(ctx, "下发用户[%s]积分计算任务失败: %v", user.Username, errTask)
+			} else {
+				logger.InfoF(ctx, "下发用户[%s]积分计算任务成功", user.Username)
+			}
+		} else {
+			if !user.IsActive {
+				err = errors.New(BannedAccount)
+				span.SetStatus(codes.Error, err.Error())
+				return nil, err
+			}
+			// update user
+			user.Username = userInfo.Username
+			user.Nickname = userInfo.Name
+			user.AvatarUrl = userInfo.AvatarUrl
+			user.IsActive = userInfo.Active
+			user.TrustLevel = userInfo.TrustLevel
+			user.LastLoginAt = time.Now()
+			tx = db.DB(ctx).Save(&user)
+			if tx.Error != nil {
+				span.SetStatus(codes.Error, tx.Error.Error())
+				return nil, tx.Error
+			}
 		}
 	}
 	return &user, nil
