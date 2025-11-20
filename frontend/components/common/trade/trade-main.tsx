@@ -1,31 +1,49 @@
 "use client"
 
 import * as React from "react"
-import { useState } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Receive } from "@/components/common/trade/receive"
-import { Payment } from "@/components/common/trade/payment"
-import { Transfer } from "@/components/common/trade/transfer"
-import { Community } from "@/components/common/trade/community"
 import { AllActivity } from "@/components/common/trade/all-activity"
+import { Community } from "@/components/common/trade/community"
+import { Payment } from "@/components/common/trade/payment"
+import { Receive } from "@/components/common/trade/receive"
 import { TradeTable } from "@/components/common/trade/trade-table"
-
-import type { OrderType } from "@/lib/services"
+import { Transfer } from "@/components/common/trade/transfer"
 import { TransactionProvider } from "@/contexts/transaction-context"
+import type { OrderType } from "@/lib/services"
 
+/** 标签触发器样式 */
+const TAB_TRIGGER_STYLES =
+  "data-[state=active]:bg-transparent " +
+  "data-[state=active]:shadow-none " +
+  "data-[state=active]:border-0 " +
+  "data-[state=active]:border-b-2 " +
+  "data-[state=active]:border-indigo-500 " +
+  "bg-transparent " +
+  "rounded-none " +
+  "border-0 " +
+  "border-b-2 " +
+  "border-transparent " +
+  "px-0 " +
+  "text-sm " +
+  "font-bold " +
+  "text-muted-foreground " +
+  "data-[state=active]:text-indigo-500 " +
+  "-mb-[2px] " +
+  "relative " +
+  "hover:text-foreground " +
+  "transition-colors " +
+  "flex-none"
 
-/* 标签触发器样式 */
-const TAB_TRIGGER_STYLES = "data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-0 data-[state=active]:border-b-2 data-[state=active]:border-[#6366f1] bg-transparent rounded-none border-0 border-b-2 border-transparent px-0 text-sm font-bold text-muted-foreground data-[state=active]:text-[#6366f1] -mb-[2px] relative hover:text-foreground transition-colors flex-none"
-
-/* 标签值类型 */
+/** 标签值类型 */
 type TabValue = OrderType | 'all'
 
 /**
  * 交易主页面组件
+ * 
  * 负责组装交易中心的各个子组件
  */
 export function TradeMain() {
-  const [activeTab, setActiveTab] = useState<TabValue>('receive')
+  const [activeTab, setActiveTab] = React.useState<TabValue>('receive')
 
   /* 获取订单类型 */
   const getOrderType = (tab: TabValue): OrderType | undefined => {
@@ -54,11 +72,15 @@ export function TradeMain() {
   return (
     <TransactionProvider defaultParams={{ page_size: 20 }}>
       <div className="py-6">
-        <h1 className="pb-2 text-2xl font-semibold">交易</h1>
+        <h1 className="text-2xl font-semibold mb-4">交易</h1>
 
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)} className="w-full">
-          <div>
-            <TabsList className="w-full">
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as TabValue)}
+          className="w-full"
+        >
+          <div className="border-b border-border">
+            <TabsList className="flex p-0 gap-4 rounded-none w-full bg-transparent justify-start h-auto">
               <TabsTrigger value="receive" className={TAB_TRIGGER_STYLES}>收款</TabsTrigger>
               <TabsTrigger value="payment" className={TAB_TRIGGER_STYLES}>付款</TabsTrigger>
               <TabsTrigger value="transfer" className={TAB_TRIGGER_STYLES}>转账</TabsTrigger>
@@ -67,10 +89,14 @@ export function TradeMain() {
             </TabsList>
           </div>
 
-          <div className="pt-2">{renderPageContent()}</div>
+          <div className="pt-2 space-y-8">
+            {renderPageContent()}
 
-          <div className="font-semibold pt-6 pb-2">交易记录</div>
-          <TradeTable type={getOrderType(activeTab)} />
+            <div className="space-y-4">
+              <div className="font-semibold">交易记录</div>
+              <TradeTable type={getOrderType(activeTab)} />
+            </div>
+          </div>
         </Tabs>
       </div>
     </TransactionProvider>

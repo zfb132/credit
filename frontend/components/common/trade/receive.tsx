@@ -2,13 +2,10 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-
 /**
  * 功能卡片组件
- * 显示功能卡片
  */
 function FeatureCard({ title, description, linkText }: { title: string, description: string, linkText: string }) {
-
   return (
     <Card className="bg-background border border-border shadow-none transition-shadow">
       <CardHeader>
@@ -28,6 +25,7 @@ function FeatureCard({ title, description, linkText }: { title: string, descript
 
 /**
  * 收款组件
+ * 
  * 显示收款功能和规则
  */
 export function Receive() {
@@ -39,9 +37,7 @@ export function Receive() {
           <p className="text-muted-foreground mb-6 leading-relaxed">
             通过无代码选项快速开始使用或探索与我们的 API 集成的可自定义账户界面。
           </p>
-          <Button
-            className="bg-[#6366f1] hover:bg-[#5558e3] text-white font-medium px-6 rounded-md shadow-sm"
-          >
+          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-6 rounded-md shadow-sm">
             开始使用
           </Button>
         </div>

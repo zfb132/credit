@@ -11,10 +11,8 @@ import { MerchantSelector } from "@/components/common/merchant/merchant-selector
 import { MerchantInfo } from "@/components/common/merchant/merchant-info"
 import { MerchantData } from "@/components/common/merchant/merchant-data"
 import { MerchantDialog } from "@/components/common/merchant/merchant-dialog"
-
 import { type MerchantAPIKey } from "@/lib/services"
 import { useMerchant } from "@/contexts/merchant-context"
-
 
 /**
  * 商户主页面组件
@@ -147,7 +145,7 @@ export function MerchantMain() {
               </div>
 
               <div className="lg:col-span-1">
-                <MerchantInfo apiKey={selectedKey} onUpdate={handleUpdate} onDelete={handleDelete}/>
+                <MerchantInfo apiKey={selectedKey} onUpdate={handleUpdate} onDelete={handleDelete} />
               </div>
             </div>
           )}

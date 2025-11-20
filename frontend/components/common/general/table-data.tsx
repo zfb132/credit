@@ -11,7 +11,6 @@ import { EmptyStateWithBorder } from "@/components/layout/empty"
 import { LoadingStateWithBorder } from "@/components/layout/loading"
 import { ListRestart, Layers, LucideIcon } from "lucide-react"
 import { formatDateTime } from "@/lib/utils"
-
 import type { Order } from "@/lib/services"
 
 
@@ -26,15 +25,15 @@ export function TransactionDataTable({ transactions }: { transactions: Order[] }
         <Table>
           <TableHeader>
             <TableRow className="border-b border-dashed">
-              <TableHead className="whitespace-nowrap text-center w-[120px]">创建时间</TableHead>
+              <TableHead className="whitespace-nowrap w-[120px]">名称</TableHead>
               <TableHead className="whitespace-nowrap text-center min-w-[160px]">订单号</TableHead>
               <TableHead className="whitespace-nowrap text-center w-[120px]">商户订单号</TableHead>
-              <TableHead className="whitespace-nowrap w-[120px]">名称</TableHead>
-              <TableHead className="whitespace-nowrap text-center w-[80px]">类型</TableHead>
               <TableHead className="whitespace-nowrap text-right min-w-[80px]">金额</TableHead>
+              <TableHead className="whitespace-nowrap text-center w-[80px]">类型</TableHead>
               <TableHead className="whitespace-nowrap text-center w-[80px]">状态</TableHead>
               <TableHead className="whitespace-nowrap text-center min-w-[100px]">交易双方</TableHead>
               <TableHead className="whitespace-nowrap text-center min-w-[50px]">商户</TableHead>
+              <TableHead className="whitespace-nowrap text-center w-[120px]">创建时间</TableHead>
               <TableHead className="whitespace-nowrap text-center w-[120px]">交易时间</TableHead>
               <TableHead className="sticky right-0 whitespace-nowrap text-center bg-background shadow-[-4px_0_8px_-2px_rgba(0,0,0,0.1)] w-[150px]">操作</TableHead>
             </TableRow>
@@ -65,12 +64,10 @@ function TransactionTableRow({ order }: { order: Order }) {
     </span>
   )
 
-
-
   return (
     <TableRow className="h-8 border-b border-dashed">
-      <TableCell className="text-xs text-center py-1">
-        {formatDateTime(order.created_at)}
+      <TableCell className="text-xs font-medium whitespace-nowrap py-1">
+        {order.order_name}
       </TableCell>
       <TableCell className="font-mono text-xs text-center py-1">
         {order.order_no}
@@ -78,8 +75,8 @@ function TransactionTableRow({ order }: { order: Order }) {
       <TableCell className="font-mono text-xs text-center py-1">
         {order.merchant_order_no || '-'}
       </TableCell>
-      <TableCell className="text-xs font-medium whitespace-nowrap py-1">
-        {order.order_name}
+      <TableCell className="whitespace-nowrap text-right py-1">
+        {getAmountDisplay(order.amount)}
       </TableCell>
       <TableCell className="whitespace-nowrap text-center py-1">
         <Badge
@@ -88,9 +85,6 @@ function TransactionTableRow({ order }: { order: Order }) {
         >
           {typeConfig[order.type].label}
         </Badge>
-      </TableCell>
-      <TableCell className="whitespace-nowrap text-right py-1">
-        {getAmountDisplay(order.amount)}
       </TableCell>
       <TableCell className="whitespace-nowrap text-center py-1">
         <Badge
@@ -137,6 +131,9 @@ function TransactionTableRow({ order }: { order: Order }) {
       </TableCell>
       <TableCell className="text-xs text-center py-1">
         {order.app_name || '-'}
+      </TableCell>
+      <TableCell className="text-xs text-center py-1">
+        {formatDateTime(order.created_at)}
       </TableCell>
       <TableCell className="text-xs text-center py-1">
         {(order.status === 'success' || order.status === 'refund') ? formatDateTime(order.trade_time) : '-'}

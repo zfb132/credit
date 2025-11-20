@@ -1,15 +1,19 @@
 import * as React from "react"
+import { Filter, CalendarIcon, X } from "lucide-react"
+import { zhCN } from "date-fns/locale"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Calendar } from "@/components/ui/calendar"
 import { Separator } from "@/components/ui/separator"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Filter, CalendarIcon, X } from "lucide-react"
-
-import { zhCN } from "date-fns/locale"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { cn } from "@/lib/utils"
 import type { OrderType, OrderStatus } from "@/lib/services"
-
 
 /* 类型标签配置 */
 export const typeConfig: Record<OrderType, { label: string; color: string }> = {
@@ -83,20 +87,6 @@ export const timeRangeOptions = [
   { label: "所有时间", getValue: () => null },
 ]
 
-
-/**
- * 表格筛选组件的属性
- * @example
- * ```tsx
- * <TableFilter
- *   enabledFilters={{ type: true, status: true, timeRange: true }}
- *   selectedTypes={["receive", "payment"]}
- *   selectedStatuses={["success", "failed"]}
- *   selectedTimeRange={{ from: new Date(), to: new Date() }}
- *   selectedQuickSelection="最近 7 天"
- * />
- * ```
- */
 export interface TableFilterProps {
   /* 启用的筛选类型 */
   enabledFilters?: {
@@ -125,23 +115,6 @@ export interface TableFilterProps {
 /**
  * 可复用的筛选组件
  * 支持类型、状态、时间范围筛选
- * 
- * @example
- * ```tsx
- * <TableFilter
- *   enabledFilters={{ type: true, status: true, timeRange: true }}
- *   selectedTypes={["receive", "payment"]}
- *   selectedStatuses={["success", "failed"]}
- *   selectedTimeRange={{ from: new Date(), to: new Date() }}
- *   selectedQuickSelection="最近 7 天"
- *   onTypeChange={setSelectedTypes}
- *   onStatusChange={setSelectedStatuses}
- *   onTimeRangeChange={setDateRange}
- *   onQuickSelectionChange={setSelectedQuickSelection}
- *   showClearButton={true}
- *   onClearAll={clearAllFilters}
- * />
- * ```
  */
 export function TableFilter({
   enabledFilters = { type: true, status: true, timeRange: true },
@@ -180,10 +153,8 @@ export function TableFilter({
     onTimeRangeChange?.(range)
   }
 
-
-
   /* 是否有激活的筛选 */
-  const hasActiveFilters = selectedTypes.length > 0 || selectedStatuses.length > 0
+  const hasActiveFilters = selectedTypes.length > 0 || selectedStatuses.length > 0 || selectedTimeRange !== null
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -214,36 +185,28 @@ export function TableFilter({
             onQuickSelectionChange={onQuickSelectionChange}
           />
         )}
-      </div>
 
-      {showClearButton && hasActiveFilters && onClearAll && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onClearAll}
-          className="h-6 px-2.5 text-xs font-bold rounded-full border border-dashed text-muted-foreground hover:text-foreground hover:border-muted-foreground/50 gap-1 self-start sm:self-auto"
-        >
-          <X className="h-3 w-3" />
-          清空筛选
-        </Button>
-      )}
+        {showClearButton && hasActiveFilters && onClearAll && (
+          <>
+            <Separator orientation="vertical" className="h-6 hidden sm:block" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClearAll}
+              className="h-6 px-2 lg:px-3 text-xs font-medium text-muted-foreground hover:text-foreground"
+            >
+              <X className="size-3 mr-1" />
+              清空筛选
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   )
 }
 
 /**
  * 可复用的筛选选择器组件
- * 支持类型、状态、时间范围筛选
- * 
- * @example
- * ```tsx
- * <FilterSelect
- *   label="类型"
- *   selectedValues={["receive", "payment"]}
- *   options={typeConfig}
- *   onToggleValue={toggleType}
- * />
- * ```
  */
 function FilterSelect<T extends string>({ label, selectedValues, options, onToggleValue }: {
   label: string
@@ -254,40 +217,82 @@ function FilterSelect<T extends string>({ label, selectedValues, options, onTogg
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className={`!h-6 !min-h-6 text-xs font-bold rounded-full border border-dashed shadow-none !px-2.5 !py-1 gap-2 inline-flex items-center w-auto hover:bg-accent ${selectedValues.length > 0
-          ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
-          : 'border-muted-foreground/20'
-          }`}>
-          <Filter className="h-3 w-3 text-muted-foreground" />
-          <span className="text-muted-foreground text-xs font-bold">{label}</span>
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn(
+            "h-6 border-dashed text-xs font-medium shadow-none",
+            selectedValues.length > 0 && "bg-accent/50 border-solid border-primary/20"
+          )}
+        >
+          <Filter className="mr-1 size-3 text-muted-foreground" />
+          {label}
           {selectedValues.length > 0 && (
             <>
-              <Separator orientation="vertical" className="h-2.5" />
-              <span className="text-blue-600 text-xs font-bold">{selectedValues.length}</span>
+              <Separator orientation="vertical" className="mx-1 h-4" />
+              <Badge
+                variant="secondary"
+                className="rounded-sm px-1 font-normal lg:hidden"
+              >
+                {selectedValues.length}
+              </Badge>
+              <div className="hidden space-x-1 lg:flex">
+                {selectedValues.length > 2 ? (
+                  <Badge
+                    variant="secondary"
+                    className="h-4 rounded-sm px-1 font-normal text-[10px]"
+                  >
+                    已选 {selectedValues.length} 项
+                  </Badge>
+                ) : (
+                  selectedValues.map((value) => (
+                    <Badge
+                      key={value}
+                      variant="secondary"
+                      className="h-4 rounded-sm px-1 font-normal text-[10px]"
+                    >
+                      {options[value].label}
+                    </Badge>
+                  ))
+                )}
+              </div>
             </>
           )}
-        </button>
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-36" align="start">
-        {(Object.keys(options) as T[]).map((value) => (
-          <DropdownMenuItem
-            key={value}
-            className="flex items-center gap-2 px-2"
-            onClick={() => onToggleValue(value)}
-          >
-            <Checkbox
-              checked={selectedValues.includes(value)}
-              onChange={() => onToggleValue(value)}
-              className="w-3 h-3 rounded-full"
-            />
-            <Badge
-              variant="secondary"
-              className={`text-[11px] px-1 ${options[value].color}`}
+      <DropdownMenuContent className="w-[120px]" align="start">
+        {(Object.keys(options) as T[]).map((value) => {
+          const isSelected = selectedValues.includes(value)
+          return (
+            <DropdownMenuItem
+              key={value}
+              onSelect={(e) => {
+                e.preventDefault()
+                onToggleValue(value)
+              }}
             >
-              {options[value].label}
-            </Badge>
-          </DropdownMenuItem>
-        ))}
+              <div className={cn(
+                "mr-2 flex size-3 items-center justify-center rounded-sm border border-primary",
+                isSelected
+                  ? "bg-primary text-primary-foreground"
+                  : "opacity-50 [&_svg]:invisible"
+              )}>
+              </div>
+              <span className="text-xs">{options[value].label}</span>
+            </DropdownMenuItem>
+          )
+        })}
+        {selectedValues.length > 0 && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={() => selectedValues.forEach(v => onToggleValue(v))}
+              className="h-5 justify-center text-center text-xs font-bold"
+            >
+              清除筛选
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )
@@ -322,37 +327,41 @@ function TimeRangeFilter({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="!h-6 !min-h-6 text-xs font-bold rounded-full border border-dashed shadow-none !px-2.5 !py-1 gap-2 inline-flex items-center w-auto hover:bg-accent">
-          <CalendarIcon className="h-3 w-3 text-muted-foreground" />
-          <span className="text-muted-foreground text-xs font-bold">时间区间</span>
-          {selectedQuickSelection && (
-            <>
-              <Separator orientation="vertical" className="h-2.5" />
-              <span className="text-blue-600 text-xs font-bold">{selectedQuickSelection}</span>
-            </>
+        <Button
+          variant="outline"
+          size="sm"
+          className={cn(
+            "h-6 border-dashed text-xs font-medium shadow-none",
+            (selectedQuickSelection || selectedTimeRange) && "bg-accent/50 border-solid border-primary/20"
           )}
-        </button>
+        >
+          <CalendarIcon className="mr-2 size-3 text-muted-foreground" />
+          {selectedQuickSelection || (selectedTimeRange ? "自定义时间" : "时间范围")}
+        </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-90 md:w-160" align="start" sideOffset={4}>
-        <div className="flex">
-          <div className="w-32 px-1 py-4">
+      <DropdownMenuContent className="w-auto p-0" align="start">
+        <div className="flex flex-col sm:flex-row">
+          <div className="flex flex-col p-2 gap-1 min-w-[120px] border-r">
             {timeRangeOptions.map((selection) => (
-              <button
+              <Button
                 key={selection.label}
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   const range = selection.getValue()
                   onTimeRangeChange(range)
                   onQuickSelectionChange?.(selection.label)
                 }}
-                className={`w-full text-left px-2 py-1.5 text-xs rounded-md hover:bg-accent transition-colors cursor-pointer ${selectedQuickSelection === selection.label ? 'bg-accent text-accent-foreground' : ''
-                  }`}
+                className={cn(
+                  "justify-start text-xs font-normal h-8",
+                  selectedQuickSelection === selection.label && "bg-accent text-accent-foreground font-medium"
+                )}
               >
                 {selection.label}
-              </button>
+              </Button>
             ))}
           </div>
-
-          <div className="px-1">
+          <div className="p-2">
             <Calendar
               mode="range"
               selected={selectedTimeRange ? { from: selectedTimeRange.from, to: selectedTimeRange.to } : undefined}

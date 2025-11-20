@@ -8,9 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-
 import services, { type MerchantAPIKey, type CreateAPIKeyRequest, type UpdateAPIKeyRequest } from "@/lib/services"
-
 
 interface MerchantDialogProps {
   /** 模式：创建或更新 */
@@ -181,7 +179,7 @@ export function MerchantDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button className="bg-[#6366f1] hover:bg-[#5558e3] text-white h-8 text-xs">
+          <Button className="bg-indigo-500 hover:bg-indigo-600 text-white h-8 text-xs">
             {mode === 'create' ? '创建应用' : '更新应用'}
           </Button>
         )}
@@ -252,7 +250,7 @@ export function MerchantDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost" disabled={processing} className="h-7 text-xs">取消</Button>
+            <Button variant="ghost" disabled={processing} className="h-8 text-xs">取消</Button>
           </DialogClose>
           <Button
             onClick={(e) => {
@@ -260,7 +258,7 @@ export function MerchantDialog({
               handleSubmit()
             }}
             disabled={processing}
-            className="bg-[#6366f1] hover:bg-[#5558e3] h-7 text-xs"
+            className="bg-indigo-500 hover:bg-indigo-600 h-8 text-xs"
           >
             {processing ? <><Spinner /> {mode === 'create' ? '创建中' : '更新中'}</> : (mode === 'create' ? '创建' : '更新')}
           </Button>

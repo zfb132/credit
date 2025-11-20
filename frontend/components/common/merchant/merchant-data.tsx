@@ -2,16 +2,65 @@
 
 import * as React from "react"
 import { useEffect } from "react"
+import { RefreshCw, Undo2, FileText, Settings, BarChart3, Zap } from "lucide-react"
 import { TableFilter } from "@/components/common/general/table-filter"
 import { TransactionTableList } from "@/components/common/general/table-data"
-import { RefreshCw, Undo2, FileText, Settings, BarChart3, Zap } from "lucide-react"
-
 import type { MerchantAPIKey, OrderType, OrderStatus } from "@/lib/services"
 import { TransactionProvider, useTransaction } from "@/contexts/transaction-context"
 
+/** 商家功能列表 */
+const MERCHANT_ACTIONS = [
+  {
+    title: "处理退款",
+    description: "为客户办理退款操作",
+    icon: Undo2,
+    color: "text-orange-600",
+    bgColor: "bg-orange-50 dark:bg-orange-950/20",
+    action: "refund",
+  },
+  {
+    title: "查看订单",
+    description: "查看详细的订单信息",
+    icon: FileText,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50 dark:bg-blue-950/20",
+    action: "view-order",
+  },
+  {
+    title: "刷新数据",
+    description: "同步最新的交易数据",
+    icon: RefreshCw,
+    color: "text-green-600",
+    bgColor: "bg-green-50 dark:bg-green-950/20",
+    action: "refresh",
+  },
+  {
+    title: "API 设置",
+    description: "配置 Webhook 和通知",
+    icon: Settings,
+    color: "text-purple-600",
+    bgColor: "bg-purple-50 dark:bg-purple-950/20",
+    action: "settings",
+  },
+  {
+    title: "数据报表",
+    description: "查看详细的统计报表",
+    icon: BarChart3,
+    color: "text-indigo-600",
+    bgColor: "bg-indigo-50 dark:bg-indigo-950/20",
+    action: "reports",
+  },
+  {
+    title: "快速测试",
+    description: "创建测试订单验证集成",
+    icon: Zap,
+    color: "text-yellow-600",
+    bgColor: "bg-yellow-50 dark:bg-yellow-950/20",
+    action: "test",
+  },
+]
 
 interface MerchantDataProps {
-  /** 当前选中的 API Key */
   apiKey: MerchantAPIKey
 }
 
@@ -98,72 +147,18 @@ function MerchantDataContent({ apiKey }: MerchantDataProps) {
     loadMore()
   }
 
-
-
-  const merchantActions = [
-    {
-      title: "处理退款",
-      description: "为客户办理退款操作",
-      icon: Undo2,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50 dark:bg-orange-950/20",
-      action: "refund",
-    },
-    {
-      title: "查看订单",
-      description: "查看详细的订单信息",
-      icon: FileText,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50 dark:bg-blue-950/20",
-      action: "view-order",
-    },
-    {
-      title: "刷新数据",
-      description: "同步最新的交易数据",
-      icon: RefreshCw,
-      color: "text-green-600",
-      bgColor: "bg-green-50 dark:bg-green-950/20",
-      action: "refresh",
-    },
-    {
-      title: "API 设置",
-      description: "配置 Webhook 和通知",
-      icon: Settings,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50 dark:bg-purple-950/20",
-      action: "settings",
-    },
-    {
-      title: "数据报表",
-      description: "查看详细的统计报表",
-      icon: BarChart3,
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-50 dark:bg-indigo-950/20",
-      action: "reports",
-    },
-    {
-      title: "快速测试",
-      description: "创建测试订单验证集成",
-      icon: Zap,
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-50 dark:bg-yellow-950/20",
-      action: "test",
-    },
-  ]
-
-
   return (
     <div className="space-y-6">
       <div>
         <h2 className="font-semibold mb-4">商家操作</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {merchantActions.map((action, index) => {
+          {MERCHANT_ACTIONS.map((action, index) => {
             const Icon = action.icon
 
             return (
               <button
                 key={index}
-                className="rounded-lg p-4 border border-dashed hover:border-primary/50 shadow-nonetransition-all text-left group"
+                className="rounded-lg p-4 border border-dashed hover:border-primary/50 shadow-none transition-all text-left group bg-background"
                 onClick={() => {
                   console.log('Action clicked:', action.action)
                 }}

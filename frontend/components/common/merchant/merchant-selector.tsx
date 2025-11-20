@@ -1,8 +1,6 @@
 import * as React from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
 import type { MerchantAPIKey } from "@/lib/services"
-
 
 interface MerchantSelectorProps {
   /** API Keys 列表 */
@@ -26,28 +24,28 @@ export function MerchantSelector({
   loading = false,
 }: MerchantSelectorProps) {
   return (
-      <Select
-        value={selectedKeyId?.toString()}
-        onValueChange={(value) => onSelect(Number(value))}
-        disabled={loading || apiKeys.length === 0}
-      >
-        <SelectTrigger className="w-fit text-xs shadow-none" size="sm">
-          <SelectValue placeholder="请选择商户应用" />
-        </SelectTrigger>
-        <SelectContent>
-          {apiKeys.map((apiKey) => (
-            <SelectItem key={apiKey.id} value={apiKey.id.toString()}>
-              <div className="flex items-center gap-2 text-xs">
-                <span className="font-medium">{apiKey.app_name}</span>
-                {apiKey.app_description && (
-                  <span className="text-xs text-muted-foreground">
-                    - {apiKey.app_description}
-                  </span>
-                )}
-              </div>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    <Select
+      value={selectedKeyId?.toString()}
+      onValueChange={(value) => onSelect(Number(value))}
+      disabled={loading || apiKeys.length === 0}
+    >
+      <SelectTrigger className="w-fit text-xs shadow-none h-8" size="sm">
+        <SelectValue placeholder="请选择商户应用" />
+      </SelectTrigger>
+      <SelectContent>
+        {apiKeys.map((apiKey) => (
+          <SelectItem key={apiKey.id} value={apiKey.id.toString()}>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-medium">{apiKey.app_name}</span>
+              {apiKey.app_description && (
+                <span className="text-xs text-muted-foreground">
+                  - {apiKey.app_description}
+                </span>
+              )}
+            </div>
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }

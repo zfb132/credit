@@ -2,6 +2,7 @@ import * as React from "react"
 import { useState } from "react"
 import Link from "next/link"
 import { toast } from "sonner"
+import { Copy, Eye, EyeOff, Trash2, ExternalLink, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   AlertDialog,
@@ -15,11 +16,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { MerchantDialog } from "@/components/common/merchant/merchant-dialog"
-import { Copy, Eye, EyeOff, Trash2, ExternalLink, Edit } from "lucide-react"
 import { formatDateTime } from "@/lib/utils"
-
 import { type MerchantAPIKey } from "@/lib/services"
-
 
 interface MerchantInfoProps {
   /** API Key */
@@ -47,21 +45,19 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
     })
   }
 
-
-
   const maskText = (text: string, showLength: number = 8) => {
     if (text.length <= showLength * 2) return text
     return `${text.substring(0, showLength)}${'•'.repeat(20)}${text.substring(text.length - showLength)}`
   }
 
   return (
-    <div className="space-y-4 sticky top-0">
+    <div className="space-y-6 sticky top-0">
       <div>
         <h2 className="text-sm font-semibold mb-4">应用信息</h2>
         <div className="border border-dashed rounded-lg">
           <div className="px-3 py-2 flex items-center justify-between border-b border-dashed last:border-b-0">
             <label className="text-xs font-medium text-muted-foreground">应用名称</label>
-            <p className="text-xs text-muted-foreground truncate text-right max-w-[70%]">{apiKey.app_name}</p>
+            <p className="text-xs font-medium truncate text-right max-w-[70%]">{apiKey.app_name}</p>
           </div>
 
           {apiKey.app_description && (
@@ -81,7 +77,7 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
             <Link
               href={apiKey.app_homepage_url}
               target="_blank"
-              className="text-xs text-[#6366f1] hover:underline flex items-center gap-1 text-right max-w-[70%]"
+              className="text-xs text-indigo-500 hover:underline flex items-center gap-1 text-right max-w-[70%]"
             >
               <span className="truncate flex-1 min-w-0">
                 {apiKey.app_homepage_url}
@@ -95,7 +91,7 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
             <Link
               href={apiKey.redirect_uri}
               target="_blank"
-              className="text-xs text-[#6366f1] hover:underline flex items-center gap-1 text-right max-w-[70%]"
+              className="text-xs text-indigo-500 hover:underline flex items-center gap-1 text-right max-w-[70%]"
             >
               <span className="truncate flex-1 min-w-0">
                 {apiKey.redirect_uri}
@@ -172,7 +168,7 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
             onSuccess={() => { }}
             onUpdate={onUpdate}
             trigger={
-              <Button variant="outline" className="text-xs text-primary h-7 border-dashed border-primary/50">
+              <Button variant="outline" className="text-xs text-primary h-8 border-dashed border-primary/50 hover:bg-primary/5">
                 <Edit className="size-3 mr-1" />
                 编辑应用
               </Button>
@@ -181,7 +177,7 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" className="text-xs text-destructive h-7 border-dashed border-destructive/50">
+              <Button variant="outline" className="text-xs text-destructive h-8 border-dashed border-destructive/50 hover:bg-destructive/5">
                 <Trash2 className="size-3 mr-1" />
                 删除应用
               </Button>

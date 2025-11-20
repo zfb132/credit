@@ -1,69 +1,99 @@
 import * as React from "react"
 import { CountingNumber } from "@/components/animate-ui/primitives/texts/counting-number"
-
 import { useUser } from "@/contexts/user-context"
 
+/** 颜色配置 - 统一管理主题色 */
+const COLORS = {
+  available: "bg-indigo-500/80",
+  pending: "bg-zinc-400/80",
+  emptyState: "bg-gray-100 dark:bg-gray-800",
+} as const
+
+/**
+ * 计算余额百分比
+ */
+function calculatePercentages(available: number, total: number) {
+  if (total <= 0) {
+    return { available: 0, pending: 0 }
+  }
+
+  const pending = total - available
+  return {
+    available: (available / total) * 100,
+    pending: (pending / total) * 100,
+  }
+}
 
 /**
  * 余额摘要组件
- * 显示余额的可视化摘要，包括未来款项和可用余额的占比
- *
- * @example
- * ```tsx
- * <BalanceSummary />
- * ```
+ * 
+ * 显示余额的可视化摘要,包括可视化进度条和详细的余额分类列表
  */
 export function BalanceSummary() {
   const { user, loading } = useUser()
 
-  /* 从用户信息中获取余额数据 */
+  // 计算余额数据
   const available = user?.available_balance ?? 0
   const community = user?.community_balance ?? 0
   const total = available + community
   const pending = total - available
 
-  const pendingPercent = total > 0
-    ? (pending / total) * 100
-    : 0
-  const availablePercent = total > 0
-    ? (available / total) * 100
-    : 0
+  // 计算百分比
+  const percentages = React.useMemo(
+    () => calculatePercentages(available, total),
+    [available, total]
+  )
 
   return (
     <div className="space-y-4">
-      <div className="w-full h-4 bg-gray-100 dark:bg-gray-800 rounded-sm overflow-hidden flex">
+      {/* 可视化进度条 */}
+      <div
+        className={`w-full h-4 ${COLORS.emptyState} rounded-sm overflow-hidden flex`}
+        role="progressbar"
+        aria-label="余额分布"
+        aria-valuenow={percentages.available}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
         <div
-          className="bg-indigo-500/80 transition-all duration-300"
-          style={{ width: `${availablePercent}%` }}
-          title={`可用: ${availablePercent.toFixed(1)}%`}
+          className={`${COLORS.available} transition-all duration-300`}
+          style={{ width: `${percentages.available}%` }}
+          title={`可用: ${percentages.available.toFixed(1)}%`}
         />
         <div
-          className="bg-zinc-400/80 transition-all duration-300"
-          style={{ width: `${pendingPercent}%` }}
-          title={`未来款项: ${pendingPercent.toFixed(1)}%`}
+          className={`${COLORS.pending} transition-all duration-300`}
+          style={{ width: `${percentages.pending}%` }}
+          title={`未来款项: ${percentages.pending.toFixed(1)}%`}
         />
       </div>
 
+      {/* 余额详情列表 */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-xs font-medium pb-2 border-b">
           <span>支付类型</span>
           <span>金额</span>
         </div>
 
+        {/* 可用余额 */}
         <div className="flex justify-between items-center font-bold text-sm pb-2 border-b border-border/50">
           <div className="flex items-center gap-2">
-            <div className="size-3 bg-indigo-500/80 rounded-xs" />
+            <div className={`size-3 ${COLORS.available} rounded-xs`} aria-hidden="true" />
             <span>可用</span>
           </div>
-          <span>{loading ? '-' : <CountingNumber number={available} decimalPlaces={2} />}</span>
+          <span>
+            {loading ? "-" : <CountingNumber number={available} decimalPlaces={2} />}
+          </span>
         </div>
 
-        <div className="flex justify-between items-center font-bold text-sm pb-2 border-b border-border/50">
+        {/* 未来款项 */}
+        <div className="flex justify-between items-center font-bold text-sm pb-2 border-border/50">
           <div className="flex items-center gap-2">
-            <div className="size-3 bg-zinc-400/80 rounded-xs" />
+            <div className={`size-3 ${COLORS.pending} rounded-xs`} aria-hidden="true" />
             <span>未来款项</span>
           </div>
-          <span>{loading ? '-' : <CountingNumber number={pending} decimalPlaces={2} />}</span>
+          <span>
+            {loading ? "-" : <CountingNumber number={pending} decimalPlaces={2} />}
+          </span>
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import * as React from "react"
 
-
 /**
  * 付款组件
+ * 
  * 显示付款功能和规则
  */
 export function Payment() {
