@@ -29,4 +29,5 @@ const (
 	DisputeNotFound          = "争议不存在"
 	NotOrderMerchant         = "您不是该订单的商家"
 	ReasonRequiredForRefusal = "拒绝退款时必须提供理由"
+	DisputeTimeWindowExpired = "订单已交易完成,超过争议时间窗口,无法发起争议"
 )
