@@ -184,8 +184,8 @@ export function PayingMain() {
   if (error) {
     return (
       <motion.div
-        className="flex flex-col items-center justify-center min-h-screen text-center px-4"
-        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+        className="flex flex-col items-center justify-center min-h-screen text-center px-4 bg-white"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{
           duration: 0.6,
@@ -194,21 +194,34 @@ export function PayingMain() {
           stiffness: 100
         }}
       >
-        <motion.h1
-          className="text-2xl font-bold text-gray-900 mb-4"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.3 }}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{
+            delay: 0.2,
+            duration: 0.5,
+            type: "spring",
+            stiffness: 200
+          }}
+          className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-6"
         >
-          出了点问题
-        </motion.h1>
-        <motion.p
-          className="text-gray-600 max-w-md"
+          <div className="size-8 text-red-600 font-bold text-4xl flex items-center justify-center">!</div>
+        </motion.div>
+        <motion.h1
+          className="text-2xl font-bold text-neutral-900 mb-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.3 }}
         >
-          您访问的订单页面已经支付完成或不存在。请检查网址或联系管理员。
+          出了点问题
+        </motion.h1>
+        <motion.p
+          className="text-neutral-500 max-w-md"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.3 }}
+        >
+          您访问的订单页面已经完成支付或不存在。请检查支付订单地址是否正确，对此如有疑问请联系商家或 LINUX DO PAY。
         </motion.p>
       </motion.div>
     )
