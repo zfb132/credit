@@ -280,7 +280,7 @@ export function LoginForm({
               服务条款
             </button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>服务条款</DialogTitle>
               <DialogDescription>请仔细阅读以下条款，使用本服务即表示您接受。</DialogDescription>
@@ -305,7 +305,7 @@ export function LoginForm({
               隐私政策
             </button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>隐私政策</DialogTitle>
               <DialogDescription>我们重视您的隐私，以下说明信息如何收集与使用。</DialogDescription>

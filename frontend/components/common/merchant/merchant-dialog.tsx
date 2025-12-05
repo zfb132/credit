@@ -184,7 +184,7 @@ export function MerchantDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{mode === 'create' ? '创建应用' : '更新应用信息'}</DialogTitle>
           <DialogDescription>

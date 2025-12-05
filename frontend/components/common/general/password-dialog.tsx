@@ -53,7 +53,7 @@ export function PasswordDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-80 p-6">
+      <DialogContent>
         <div className="flex flex-col items-center space-y-6">
           <div className="text-center">
             <h2 className="text-lg font-semibold">{title}</h2>

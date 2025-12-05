@@ -41,7 +41,7 @@ const pendingRequests = new Map<string, Promise<AxiosResponse<ApiResponse>>>();
  */
 function getRequestKey(config: { method?: string; url?: string; data?: unknown }): string {
   const baseKey = `${config.method?.toUpperCase()}_${config.url}`;
-  
+
   /* 序列化加入键中 */
   if (config.data) {
     try {
@@ -52,7 +52,7 @@ function getRequestKey(config: { method?: string; url?: string; data?: unknown }
       return baseKey;
     }
   }
-  
+
   return baseKey;
 }
 
@@ -80,11 +80,14 @@ function initiateLogin(currentPath: string): Promise<never> {
   if (!currentPath.startsWith('/login') && !currentPath.startsWith('/callback')) {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem('redirect_after_login', currentPath);
-      window.location.href = '/login';
+      // Ensure we preserve the query parameters if needed, but for now just the path
+      const loginUrl = new URL('/login', window.location.origin);
+      loginUrl.searchParams.set('callbackUrl', currentPath);
+      window.location.href = loginUrl.toString();
     }
   }
 
-  return new Promise<never>(() => {});
+  return new Promise<never>(() => { });
 }
 
 /**
@@ -219,101 +222,101 @@ export function cancelAllRequests(): void {
 const wrappedApiClient = {
   get: <T = ApiResponse>(url: string, config?: InternalAxiosRequestConfig) => {
     const requestKey = getRequestKey({ method: 'GET', url, data: config?.params });
-    
+
     /* 检查是否有相同的请求正在进行 */
     if (pendingRequests.has(requestKey)) {
       return pendingRequests.get(requestKey) as Promise<AxiosResponse<T>>;
     }
-    
+
     /* 发起新请求并缓存 Promise */
     const promise = apiClient.get<T>(url, config);
     pendingRequests.set(requestKey, promise as Promise<AxiosResponse<ApiResponse>>);
-    
+
     /* 请求完成后清除缓存 */
     promise.finally(() => {
       pendingRequests.delete(requestKey);
     });
-    
+
     return promise;
   },
-  
+
   post: <T = ApiResponse>(url: string, data?: unknown, config?: InternalAxiosRequestConfig) => {
     const requestKey = getRequestKey({ method: 'POST', url, data });
-    
+
     /* 检查是否有相同的请求正在进行 */
     if (pendingRequests.has(requestKey)) {
       return pendingRequests.get(requestKey) as Promise<AxiosResponse<T>>;
     }
-    
+
     /* 发起新请求并缓存 Promise */
     const promise = apiClient.post<T>(url, data, config);
     pendingRequests.set(requestKey, promise as Promise<AxiosResponse<ApiResponse>>);
-    
+
     /* 请求完成后清除缓存 */
     promise.finally(() => {
       pendingRequests.delete(requestKey);
     });
-    
+
     return promise;
   },
-  
+
   put: <T = ApiResponse>(url: string, data?: unknown, config?: InternalAxiosRequestConfig) => {
     const requestKey = getRequestKey({ method: 'PUT', url, data });
-    
+
     /* 检查是否有相同的请求正在进行 */
     if (pendingRequests.has(requestKey)) {
       return pendingRequests.get(requestKey) as Promise<AxiosResponse<T>>;
     }
-    
+
     /* 发起新请求并缓存 Promise */
     const promise = apiClient.put<T>(url, data, config);
     pendingRequests.set(requestKey, promise as Promise<AxiosResponse<ApiResponse>>);
-    
+
     /* 请求完成后清除缓存 */
     promise.finally(() => {
       pendingRequests.delete(requestKey);
     });
-    
+
     return promise;
   },
-  
+
   patch: <T = ApiResponse>(url: string, data?: unknown, config?: InternalAxiosRequestConfig) => {
     const requestKey = getRequestKey({ method: 'PATCH', url, data });
-    
+
     /* 检查是否有相同的请求正在进行 */
     if (pendingRequests.has(requestKey)) {
       return pendingRequests.get(requestKey) as Promise<AxiosResponse<T>>;
     }
-    
+
     /* 发起新请求并缓存 Promise */
     const promise = apiClient.patch<T>(url, data, config);
     pendingRequests.set(requestKey, promise as Promise<AxiosResponse<ApiResponse>>);
-    
+
     /* 请求完成后清除缓存 */
     promise.finally(() => {
       pendingRequests.delete(requestKey);
     });
-    
+
     return promise;
   },
-  
+
   delete: <T = ApiResponse>(url: string, config?: InternalAxiosRequestConfig) => {
     const requestKey = getRequestKey({ method: 'DELETE', url, data: config?.params });
-    
+
     /* 检查是否有相同的请求正在进行 */
     if (pendingRequests.has(requestKey)) {
       return pendingRequests.get(requestKey) as Promise<AxiosResponse<T>>;
     }
-    
+
     /* 发起新请求并缓存 Promise */
     const promise = apiClient.delete<T>(url, config);
     pendingRequests.set(requestKey, promise as Promise<AxiosResponse<ApiResponse>>);
-    
+
     /* 请求完成后清除缓存 */
     promise.finally(() => {
       pendingRequests.delete(requestKey);
     });
-    
+
     return promise;
   },
 };

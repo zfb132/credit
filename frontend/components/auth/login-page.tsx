@@ -65,7 +65,7 @@ export function LoginPage() {
     "Secure transactions, anytime, anywhere.",
     "Your trusted payment partner."
   ]
-  
+
   const [currentSloganIndex, setCurrentSloganIndex] = useState(0)
 
   /* 定时更新标语 */
@@ -99,8 +99,13 @@ export function LoginPage() {
             setLoginSuccess(true)
             toast.success("登录成功")
 
+            const callbackUrl = searchParams.get('callbackUrl') || sessionStorage.getItem('redirect_after_login') || '/home'
+            if (sessionStorage.getItem('redirect_after_login')) {
+              sessionStorage.removeItem('redirect_after_login')
+            }
+
             setTimeout(() => {
-              router.replace('/home')
+              router.replace(callbackUrl)
             }, 1500)
           }
         } catch (error) {
@@ -151,8 +156,13 @@ export function LoginPage() {
         setPayKey("")
         setConfirmPayKey("")
         setSetupStep('password')
+        setSetupStep('password')
         setTimeout(() => {
-          router.replace('/home')
+          const callbackUrl = searchParams.get('callbackUrl') || sessionStorage.getItem('redirect_after_login') || '/home'
+          if (sessionStorage.getItem('redirect_after_login')) {
+            sessionStorage.removeItem('redirect_after_login')
+          }
+          router.replace(callbackUrl)
         }, 1500)
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : "设置支付密码失败"

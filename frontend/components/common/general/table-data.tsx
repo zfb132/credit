@@ -100,8 +100,8 @@ function OrderDetailDialog({ order }: { order: Order }) {
         </TooltipContent>
       </Tooltip>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent showCloseButton={false} className="max-w-sm p-0 overflow-hidden bg-transparent border-0 shadow-none sm:max-w-[380px]">
-          <DialogHeader className="sr-only">
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
             <DialogTitle>交易详情</DialogTitle>
           </DialogHeader>
 
@@ -304,10 +304,10 @@ function CreateDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: (
         </TooltipContent>
       </Tooltip>
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className={isMobile ? "max-w-[95vw] p-4" : "max-w-md"}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className={isMobile ? "text-base" : ""}>发起争议</DialogTitle>
-            <DialogDescription className={isMobile ? "text-xs" : ""}>
+            <DialogTitle>发起争议</DialogTitle>
+            <DialogDescription>
               如果您对订单有疑问，可以发起争议。商家将在规定时间内处理。
             </DialogDescription>
           </DialogHeader>
@@ -332,12 +332,12 @@ function CreateDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: (
             </div>
           </div>
 
-          <DialogFooter className={isMobile ? "flex-col gap-2 sm:flex-row" : ""}>
+          <DialogFooter>
             <DialogClose asChild>
               <Button
                 variant="ghost"
                 disabled={loading}
-                className={isMobile ? "w-full h-9 text-sm" : "h-8 text-xs"}
+                className="h-8 text-xs"
               >
                 取消
               </Button>
@@ -348,7 +348,7 @@ function CreateDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: (
                 handleCreateDispute()
               }}
               disabled={loading}
-              className={isMobile ? "w-full bg-indigo-500 h-9 text-sm" : "bg-indigo-500 h-8 text-xs"}
+              className="bg-indigo-500 h-8 text-xs"
             >
               {loading ? <><Spinner /> 提交中</> : '确认发起'}
             </Button>
@@ -364,7 +364,6 @@ function CreateDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: (
  * 场景2：付款方在争议进行中取消争议
  */
 function CancelDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: () => void }) {
-  const isMobile = useIsMobile()
   const { updateOrderStatus } = useTransaction()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -422,20 +421,20 @@ function CancelDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: (
         </TooltipContent>
       </Tooltip>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className={isMobile ? "max-w-[95vw] p-4" : "max-w-md"}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className={isMobile ? "text-base" : ""}>取消争议</DialogTitle>
-            <DialogDescription className={isMobile ? "text-xs" : ""}>
+            <DialogTitle>取消争议</DialogTitle>
+            <DialogDescription>
               您确定要取消当前的争议申请吗？取消后交易将恢复正常。
             </DialogDescription>
           </DialogHeader>
 
-          <DialogFooter className={isMobile ? "flex-col gap-2 sm:flex-row" : ""}>
+          <DialogFooter>
             <DialogClose asChild>
               <Button
                 variant="ghost"
                 disabled={loading}
-                className={isMobile ? "w-full h-9 text-sm" : "h-8 text-xs"}
+                className="h-8 text-xs"
               >
                 取消
               </Button>
@@ -446,7 +445,7 @@ function CancelDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: (
                 handleCancelDispute()
               }}
               disabled={loading}
-              className={isMobile ? "w-full bg-indigo-500 h-9 text-sm" : "bg-indigo-500 h-8 text-xs"}
+              className="bg-indigo-500 h-8 text-xs"
             >
               {loading ? <><Spinner /> 取消中</> : '确认取消'}
             </Button>
@@ -462,7 +461,6 @@ function CancelDisputeDialog({ order, onSuccess }: { order: Order; onSuccess?: (
  * 场景3：付款方查看被拒绝的争议记录
  */
 function ViewDisputeHistoryDialog({ order }: { order: Order }) {
-  const isMobile = useIsMobile()
   const [open, setOpen] = useState(false)
   const [disputeHistory, setDisputeHistory] = useState<Dispute | null>(null)
   const [fetchingHistory, setFetchingHistory] = useState(false)
@@ -548,10 +546,10 @@ function ViewDisputeHistoryDialog({ order }: { order: Order }) {
         </TooltipContent>
       </Tooltip>
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className={isMobile ? "max-w-[95vw] p-4" : "max-w-md"}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className={isMobile ? "text-base" : ""}>争议详情</DialogTitle>
-            <DialogDescription className={isMobile ? "text-xs" : ""}>
+            <DialogTitle>争议详情</DialogTitle>
+            <DialogDescription>
               查看争议处理记录
             </DialogDescription>
           </DialogHeader>
@@ -594,11 +592,11 @@ function ViewDisputeHistoryDialog({ order }: { order: Order }) {
             </div>
           )}
 
-          <DialogFooter className={isMobile ? "flex-col gap-2 sm:flex-row" : ""}>
+          <DialogFooter>
             <DialogClose asChild>
               <Button
                 variant="ghost"
-                className={isMobile ? "w-full h-9 text-sm" : "h-8 text-xs"}
+                className="h-8 text-xs"
               >
                 关闭
               </Button>
@@ -615,7 +613,6 @@ function ViewDisputeHistoryDialog({ order }: { order: Order }) {
  * 场景4：收款方（商户）处理争议，同意或拒绝退款
  */
 function RefundReviewDialog({ order, onSuccess }: { order: Order; onSuccess?: () => void }) {
-  const isMobile = useIsMobile()
   const { updateOrderStatus } = useTransaction()
   const { refetch: refetchUser } = useUser()
   const [open, setOpen] = useState(false)
@@ -754,10 +751,10 @@ function RefundReviewDialog({ order, onSuccess }: { order: Order; onSuccess?: ()
         </TooltipContent>
       </Tooltip>
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className={isMobile ? "max-w-[95vw] p-4" : "max-w-2xl"}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className={isMobile ? "text-base" : ""}>处理争议</DialogTitle>
-            <DialogDescription className={isMobile ? "text-xs" : ""}>
+            <DialogTitle>处理争议</DialogTitle>
+            <DialogDescription>
               请审核此争议申请。您可以同意退款或拒绝退款。
             </DialogDescription>
           </DialogHeader>
@@ -829,12 +826,12 @@ function RefundReviewDialog({ order, onSuccess }: { order: Order; onSuccess?: ()
             </div>
           )}
 
-          <DialogFooter className={isMobile ? "flex-col gap-2 sm:flex-row" : ""}>
+          <DialogFooter>
             <DialogClose asChild>
               <Button
                 variant="ghost"
                 disabled={loading}
-                className={isMobile ? "w-full h-9 text-sm" : "h-8 text-xs"}
+                className="h-8 text-xs"
               >
                 取消
               </Button>
@@ -845,7 +842,7 @@ function RefundReviewDialog({ order, onSuccess }: { order: Order; onSuccess?: ()
                 handleSubmit()
               }}
               disabled={loading || !action}
-              className={isMobile ? "w-full bg-indigo-500 h-9 text-sm" : "bg-indigo-500 h-8 text-xs"}
+              className="bg-indigo-500 h-8 text-xs"
             >
               {loading ? <><Spinner /> 提交中</> : '确认处理'}
             </Button>

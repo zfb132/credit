@@ -134,7 +134,7 @@ export function Transfer() {
       </div>
 
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>填写转账信息</DialogTitle>
             <DialogDescription>
