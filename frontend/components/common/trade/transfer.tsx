@@ -44,7 +44,7 @@ export function Transfer() {
   /* 处理表单提交（第一步）*/
   const handleFormSubmit = () => {
     if (!recipientUsername.trim()) {
-      toast.error("请输入收款人用户名")
+      toast.error("请输入收款人账户")
       return
     }
 
@@ -150,12 +150,12 @@ export function Transfer() {
                   <Input
                     id="recipient"
                     type="text"
-                    placeholder="输入用户名"
+                    placeholder="输入账户"
                     value={recipientUsername}
                     onChange={(e) => setRecipientUsername(e.target.value)}
                     disabled={loading}
                   />
-                  <p className="text-xs text-muted-foreground">请输入收款人的用户名</p>
+                  <p className="text-xs text-muted-foreground">请输入收款人的账户</p>
                 </div>
 
                 <div className="grid gap-2">

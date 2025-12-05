@@ -868,12 +868,14 @@ function TransactionTableRow({ order }: { order: Order }) {
     </span>
   )
 
+  const isDisputing = order.type === 'receive' && order.status === 'disputing'
+
   return (
     <TableRow
       key={order.id}
       className={`
-        group hover:bg-muted/50 data-[state=selected]:bg-muted
-        ${order.type === 'receive' && order.status === 'disputing' ? 'bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100/50 dark:hover:bg-yellow-900/30' : ''}
+        border-dashed group hover:bg-muted/50 data-[state=selected]:bg-muted
+        ${isDisputing ? 'bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100/50 dark:hover:bg-yellow-900/30' : ''}
       `}
     >
       <TableCell className="text-[11px] font-medium whitespace-nowrap py-1">
@@ -953,7 +955,12 @@ function TransactionTableRow({ order }: { order: Order }) {
       <TableCell className="text-[11px] font-medium text-left py-1">
         {formatDateTime(order.expires_at)}
       </TableCell>
-      <TableCell className="sticky right-0 whitespace-nowrap text-center bg-background shadow-[-4px_0_8px_-2px_rgba(0,0,0,0.1)] py-1 z-10">
+      <TableCell className={`
+        sticky right-0 whitespace-nowrap text-center shadow-[-4px_0_8px_-2px_rgba(0,0,0,0.1)] py-1 z-10
+        ${isDisputing
+          ? 'bg-yellow-50 dark:bg-yellow-900/20 group-hover:bg-yellow-100/50 dark:group-hover:bg-yellow-900/30'
+          : 'bg-background group-hover:bg-muted/50'}
+      `}>
         <OrderDetailDialog order={order} />
 
         {/* 场景1：付款方对成功的订单发起争议 */}

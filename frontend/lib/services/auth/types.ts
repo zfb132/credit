@@ -34,7 +34,7 @@ export enum PayLevel {
 export interface User {
   /** 用户 ID */
   id: number;
-  /** 用户名 */
+  /** 账户 */
   username: string;
   /** 昵称 */
   nickname: string;

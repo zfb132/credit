@@ -106,9 +106,9 @@ export interface GetMerchantOrderResponse {
     order_no: string;
     /** 订单名称 */
     order_name: string;
-    /** 付款方用户名 */
+    /** 付款方账户 */
     payer_username: string;
-    /** 收款方用户名 */
+    /** 收款方账户 */
     payee_username: string;
     /** 交易金额 */
     amount: string;

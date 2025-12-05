@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {Inter, Noto_Sans_SC, Geist_Mono} from 'next/font/google';
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -40,8 +41,15 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${notoSansSC.variable} ${geistMono.variable} hide-scrollbar font-sans antialiased`}
       >
-        {children}
-        <Toaster position="top-center" />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster position="top-center" />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,8 +1,10 @@
 "use client"
 
 import * as React from "react"
+import Link from "next/link"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel"
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb"
 
 import { cn } from "@/lib/utils"
 import { PayLevel, User } from "@/lib/services/auth"
@@ -225,58 +227,64 @@ export function ProfileMain() {
 
   if (!user) {
     return (
-      <div className="py-6 space-y-4">
-        <div className="border-b border-border pb-4">
-          <h1 className="text-2xl font-semibold">个人资料</h1>
-        </div>
+      <div className="py-6 space-y-6">
         <div className="text-sm text-muted-foreground">未找到用户信息</div>
       </div>
     )
   }
 
   return (
-    <div className="py-6 space-y-8">
-      <div className="border-b border-border pb-4">
-        <h1 className="text-2xl font-semibold">个人资料</h1>
+    <div className="py-6 space-y-6">
+      <div className="font-semibold">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/settings" className="text-base text-primary">设置</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-base font-semibold">个人资料</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
-      <div className="space-y-4">
-        <h2 className="text-sm font-semibold">会员信息</h2>
-        
-        <Carousel
-          setApi={setApi}
-          opts={{
-            align: "center",
-            loop: false,
-            containScroll: false,
-          }}
-          className="w-full relative"
-        >
-          {/* 左右模糊过渡遮罩 */}
-          <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
-          <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
-          <CarouselContent className="-ml-4">
-            {LEVEL_CONFIGS.map((config, index) => (
-              <CarouselItem key={config.level} className="pl-4 basis-[85%] sm:basis-[70%] md:basis-[65%] lg:basis-[50%] xl:basis-[40%] 2xl:basis-[35%]">
-                <MembershipCard
-                  config={config}
-                  user={user}
-                  score={score}
-                  currentLevel={currentLevel}
-                  isActive={index === current}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="left-0" />
-          <CarouselNext className="right-0" />
-        </Carousel>
+      <h2 className="font-medium text-sm text-muted-foreground">会员等级</h2>
 
-      </div>
+      <Carousel
+        setApi={setApi}
+        opts={{
+          align: "center",
+          loop: false,
+          containScroll: false,
+        }}
+        className="w-full relative"
+      >
+        <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
+        <CarouselContent className="-ml-4">
+          {LEVEL_CONFIGS.map((config, index) => (
+            <CarouselItem key={config.level} className="pl-4 basis-[85%] sm:basis-[70%] md:basis-[65%] lg:basis-[50%] xl:basis-[40%] 2xl:basis-[35%]">
+              <MembershipCard
+                config={config}
+                user={user}
+                score={score}
+                currentLevel={currentLevel}
+                isActive={index === current}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-0" />
+        <CarouselNext className="right-0" />
+      </Carousel>
+
 
       <div className="space-y-4">
-        <h2 className="text-sm font-semibold">基本信息</h2>
-        
+        <h2 className="font-medium text-sm text-muted-foreground">基本信息</h2>
+
         <div className="flex items-start gap-18">
           <Avatar className="size-16">
             <AvatarImage src={user.avatar_url} alt={user.nickname || user.username} />
@@ -288,7 +296,7 @@ export function ProfileMain() {
           <div className="flex-1">
             <div className="grid grid-cols-3 gap-6">
               <div className="space-y-1">
-                <div className="text-xs text-muted-foreground">用户名</div>
+                <div className="text-xs text-muted-foreground">账户</div>
                 <div className="text-sm font-medium">@{user.username}</div>
               </div>
 

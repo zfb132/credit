@@ -57,7 +57,8 @@ function LoadingSkeleton() {
  */
 function OrderContent({ orderInfo }: { orderInfo: GetMerchantOrderResponse }) {
   const amount = parseFloat(orderInfo.order.amount).toFixed(2)
-  const feeRate = (parseFloat(orderInfo.user_pay_config.fee_rate) * 100).toFixed(2)
+  const feeRateValue = orderInfo.user_pay_config?.fee_rate
+  const feeRate = feeRateValue ? (parseFloat(feeRateValue) * 100).toFixed(2) : '0.00'
 
   return (
     <>

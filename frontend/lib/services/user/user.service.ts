@@ -31,7 +31,7 @@ export class UserService extends BaseService {
 
   /**
    * 搜索用户
-   * @param username - 用户名
+   * @param username - 账户
    * @returns 用户信息
    * @throws {UnauthorizedError} 当用户未登录时
    * @throws {NotFoundError} 当用户不存在时

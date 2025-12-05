@@ -12,7 +12,7 @@ export interface UpdatePayKeyRequest {
 export interface UserInfo {
   /** 用户 ID */
   id: number;
-  /** 用户名 */
+  /** 账户 */
   username: string;
   /** 邮箱 */
   email?: string;
@@ -22,7 +22,7 @@ export interface UserInfo {
  * 搜索用户请求
  */
 export interface SearchUserRequest {
-  /** 用户名 */
+  /** 账户 */
   username: string;
 }
 

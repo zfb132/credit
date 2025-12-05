@@ -24,9 +24,9 @@ export interface Order {
   payer_user_id: number;
   /** 收款方用户ID */
   payee_user_id: number;
-  /** 付款方用户名 */
+  /** 付款方账户 */
   payer_username: string;
-  /** 收款方用户名 */
+  /** 收款方账户 */
   payee_username: string;
   /** 交易金额（decimal字符串） */
   amount: string;
@@ -109,7 +109,7 @@ export interface CreateDisputeRequest {
 export interface TransferRequest {
   /** 收款人用户 ID */
   recipient_id: number;
-  /** 收款人用户名 */
+  /** 收款人账户 */
   recipient_username: string;
   /** 转账金额（必须大于0，最多2位小数） */
   amount: number | string;

@@ -19,9 +19,9 @@ export interface Dispute {
   status: DisputeStatus;
   /** 处理者用户 ID */
   handler_user_id?: number;
-  /** 发起者用户名 */
+  /** 发起者账户 */
   initiator_username: string;
-  /** 处理者用户名 */
+  /** 处理者账户 */
   handler_username: string;
   /** 创建时间 */
   created_at: string;
@@ -35,7 +35,7 @@ export interface Dispute {
 export interface DisputeWithOrder extends Dispute {
   /** 订单名称 */
   order_name: string;
-  /** 收款方用户名 */
+  /** 收款方账户 */
   payee_username: string;
   /** 订单金额 */
   amount: string;
