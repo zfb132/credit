@@ -3,7 +3,7 @@
 import { motion } from "motion/react"
 import { usePathname } from "next/navigation"
 import { AppSidebar } from "@/components/layout/sidebar"
-import { SiteHeader } from "@/components/layout/site-header"
+import { SiteHeader } from "@/components/layout/header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 import { UserProvider } from "@/contexts/user-context"

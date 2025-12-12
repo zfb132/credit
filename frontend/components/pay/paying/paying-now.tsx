@@ -144,7 +144,8 @@ function MethodSelectionStep({
   isOpen,
   onSelectedMethodChange,
   onIsOpenChange,
-  onCurrentStepChange
+  onCurrentStepChange,
+  forceMobile = false
 }: {
   orderInfo: GetMerchantOrderResponse
   selectedMethod: string
@@ -152,6 +153,7 @@ function MethodSelectionStep({
   onSelectedMethodChange: (method: string) => void
   onIsOpenChange: (isOpen: boolean) => void
   onCurrentStepChange: (step: PaymentStep) => void
+  forceMobile?: boolean
 }) {
   return (
     <motion.div
@@ -162,7 +164,7 @@ function MethodSelectionStep({
       transition={{ duration: 0.3 }}
       className="space-y-6 w-full max-w-xs mx-auto"
     >
-      <div className="space-y-2 text-center md:text-left">
+      <div className={`space-y-2 text-center ${ forceMobile ? '' : 'md:text-left' }`}>
         <h2 className="text-xl font-bold text-foreground tracking-tight">选择支付方式</h2>
         <p className="text-xs text-muted-foreground">请选择您想要使用的支付方式</p>
       </div>
@@ -172,7 +174,7 @@ function MethodSelectionStep({
           <CollapsibleTrigger asChild>
             <div
               className={`group cursor-pointer rounded-xl p-2.5 transition-all duration-300 border backdrop-blur-sm ${ selectedMethod === PAYMENT_METHODS.LINUX_DO_PAY
-                ? 'border-primary/50 bg-primary/5 shadow-sm'
+                ? 'border-primary/50 bg-primary/5'
                 : 'border-border/50 bg-card hover:bg-muted/50 hover:border-border'
                 }`}
               onClick={() => {
@@ -365,6 +367,7 @@ interface PayingNowProps {
   onSelectedMethodChange: (method: string) => void
   onIsOpenChange: (isOpen: boolean) => void
   onPayOrder: () => void
+  forceMobile?: boolean
 }
 
 /**
@@ -383,7 +386,8 @@ export function PayingNow({
   onCurrentStepChange,
   onSelectedMethodChange,
   onIsOpenChange,
-  onPayOrder
+  onPayOrder,
+  forceMobile = false
 }: PayingNowProps) {
   const renderContent = () => {
     if (loading) return <LoadingSkeleton />
@@ -405,6 +409,7 @@ export function PayingNow({
                 onSelectedMethodChange={onSelectedMethodChange}
                 onIsOpenChange={onIsOpenChange}
                 onCurrentStepChange={onCurrentStepChange}
+                forceMobile={forceMobile}
               />
             ) : (
               <PaymentStep
@@ -425,7 +430,7 @@ export function PayingNow({
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-8 relative overflow-hidden bg-white dark:bg-neutral-900">
+    <div className={`flex-1 flex flex-col items-center justify-center p-6 relative overflow-hidden bg-white dark:bg-neutral-900 ${ forceMobile ? '' : 'md:p-8' }`}>
       <div className="w-full relative z-10 flex flex-col h-full justify-center">
         <div className="flex-1 flex flex-col justify-center">
           {renderContent()}

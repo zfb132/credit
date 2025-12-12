@@ -165,6 +165,8 @@ export interface PaymentLink {
   created_at: string;
   /** 更新时间 */
   updated_at: string;
+  /** 应用名称 */
+  app_name: string;
 }
 
 /**
@@ -177,6 +179,53 @@ export interface CreatePaymentLinkRequest {
   product_name: string;
   /** 备注（可选） */
   remark?: string;
+}
+
+/**
+ * 通过支付链接支付请求参数
+ */
+export interface PayByLinkRequest {
+  /** 支付链接 Token */
+  token: string;
+  /** 支付密码（6位数字） */
+  pay_key: string;
+  /** 备注（可选，最大100字符） */
+  remark?: string;
+}
+
+/**
+ * 获取支付链接信息响应
+ * 包含支付链接信息和商户信息
+ */
+export interface GetPaymentLinkInfoResponse {
+  /** 支付链接信息 */
+  payment_link: PaymentLink;
+  /** 商户信息 */
+  merchant: {
+    /** 应用名称 */
+    app_name: string;
+    /** 跳转URI */
+    redirect_uri: string;
+  };
+  /** 用户支付配置信息 */
+  user_pay_config: {
+    /** 配置ID */
+    id: number;
+    /** 支付等级 */
+    level: number;
+    /** 最低分数 */
+    min_score: number;
+    /** 最高分数 */
+    max_score: number | null;
+    /** 每日限额 */
+    daily_limit: number | null;
+    /** 手续费率 */
+    fee_rate: string;
+    /** 创建时间 */
+    created_at: string;
+    /** 更新时间 */
+    updated_at: string;
+  };
 }
 
 /**

@@ -10,6 +10,7 @@ import type {
   GetMerchantOrderResponse,
   PaymentLink,
   CreatePaymentLinkRequest,
+  PayByLinkRequest,
   QueryMerchantOrderRequest,
   QueryMerchantOrderResponse,
   RefundMerchantOrderRequest,
@@ -78,7 +79,7 @@ export class MerchantService extends BaseService {
    * ```
    */
   static async getAPIKey(id: number): Promise<MerchantAPIKey> {
-    return this.get<MerchantAPIKey>(`/api-keys/${id}`);
+    return this.get<MerchantAPIKey>(`/api-keys/${ id }`);
   }
 
   /**
@@ -103,7 +104,7 @@ export class MerchantService extends BaseService {
     id: number,
     request: UpdateAPIKeyRequest,
   ): Promise<void> {
-    return this.put<void>(`/api-keys/${id}`, request);
+    return this.put<void>(`/api-keys/${ id }`, request);
   }
 
   /**
@@ -120,7 +121,7 @@ export class MerchantService extends BaseService {
    * ```
    */
   static async deleteAPIKey(id: number): Promise<void> {
-    return this.delete<void>(`/api-keys/${id}`);
+    return this.delete<void>(`/api-keys/${ id }`);
   }
 
   // ==================== 支付链接管理 ====================
@@ -145,7 +146,7 @@ export class MerchantService extends BaseService {
    * ```
    */
   static async createPaymentLink(apiKeyId: number, request: CreatePaymentLinkRequest): Promise<PaymentLink> {
-    return this.post<PaymentLink>(`/api-keys/${apiKeyId}/payment-links`, request);
+    return this.post<PaymentLink>(`/api-keys/${ apiKeyId }/payment-links`, request);
   }
 
   /**
@@ -163,7 +164,7 @@ export class MerchantService extends BaseService {
    * ```
    */
   static async listPaymentLinks(apiKeyId: number): Promise<PaymentLink[]> {
-    return this.get<PaymentLink[]>(`/api-keys/${apiKeyId}/payment-links`);
+    return this.get<PaymentLink[]>(`/api-keys/${ apiKeyId }/payment-links`);
   }
 
   /**
@@ -181,7 +182,65 @@ export class MerchantService extends BaseService {
    * ```
    */
   static async deletePaymentLink(apiKeyId: number, linkId: number): Promise<void> {
-    return this.delete<void>(`/api-keys/${apiKeyId}/payment-links/${linkId}`);
+    return this.delete<void>(`/api-keys/${ apiKeyId }/payment-links/${ linkId }`);
+  }
+
+  /**
+   * 通过 Token 获取支付链接信息
+   * 
+   * @description
+   * 公开接口，用于支付页面获取支付链接详情。
+   * 无需登录即可访问。
+   * 
+   * @param token - 支付链接 Token
+   * @returns 支付链接信息（包含商品名称、金额等）
+   * @throws {NotFoundError} 当支付链接不存在时
+   * 
+   * @example
+   * ```typescript
+   * const linkInfo = await MerchantService.getPaymentLinkByToken('abc123');
+   * console.log('商品名称:', linkInfo.product_name);
+   * console.log('金额:', linkInfo.amount);
+   * ```
+   */
+  static async getPaymentLinkByToken(token: string): Promise<PaymentLink> {
+    return this.get<PaymentLink>(`/payment-links/${ token }`);
+  }
+
+  /**
+   * 通过支付链接支付
+   * 
+   * @description
+   * 用户使用此接口通过支付链接进行支付。
+   * 需要用户登录，并且用户余额充足。
+   * 
+   * @param request - 支付请求参数（token 和 pay_key）
+   * @returns void
+   * @throws {UnauthorizedError} 当用户未登录时
+   * @throws {NotFoundError} 当支付链接不存在时
+   * @throws {ApiErrorBase} 当余额不足、支付密码错误等业务错误时
+   * 
+   * @example
+   * ```typescript
+   * try {
+   *   await MerchantService.payByLink({
+   *     token: 'abc123',
+   *     pay_key: '123456',
+   *     remark: '备注信息'
+   *   });
+   *   console.log('支付成功');
+   * } catch (error) {
+   *   console.error('支付失败:', error.message);
+   * }
+   * ```
+   * 
+   * @remarks
+   * - 用户不能支付自己创建的支付链接
+   * - 用户余额必须充足
+   * - 支付成功后会扣除手续费（根据商户的支付等级）
+   */
+  static async payByLink(request: PayByLinkRequest): Promise<void> {
+    return this.post<void>('/payment-links/pay', request);
   }
 
   // ==================== 商户支付订单 ====================

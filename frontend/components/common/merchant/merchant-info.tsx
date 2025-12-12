@@ -39,7 +39,7 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
   /* 复制到剪贴板 */
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      toast.success(`${label} 已复制`)
+      toast.success(`${ label } 已复制`)
     }).catch(() => {
       toast.error('复制失败')
     })
@@ -47,7 +47,7 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
 
   const maskText = (text: string, showLength: number = 8) => {
     if (text.length <= showLength * 2) return text
-    return `${text.substring(0, showLength)}${'•'.repeat(20)}${text.substring(text.length - showLength)}`
+    return `${ text.substring(0, showLength) }${ '•'.repeat(20) }${ text.substring(text.length - showLength) }`
   }
 
   return (
@@ -86,7 +86,7 @@ export function MerchantInfo({ apiKey, onUpdate, onDelete }: MerchantInfoProps) 
             </Link>
           </div>
 
-          <div className="px-3 py-2 flex items-center justify-between">
+          <div className="px-3 py-2 flex items-center justify-between border-b border-dashed last:border-b-0">
             <label className="text-xs font-medium text-muted-foreground">回调 URI</label>
             <Link
               href={apiKey.redirect_uri}

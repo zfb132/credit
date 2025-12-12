@@ -163,13 +163,13 @@ function MerchantDataContent({ apiKey }: MerchantDataProps) {
                     handleViewAllOrders()
 
                   } else if (action.action === 'online-payment') {
-                    router.push(`/merchant/online-paying?apiKeyId=${apiKey.id}`)
+                    router.push(`/merchant/online-paying?apiKeyId=${ apiKey.id }`)
                   }
                 }}
               >
                 <div className="flex items-center gap-4">
-                  <div className={`rounded-lg p-2 ${action.bgColor}`}>
-                    <Icon className={`h-4 w-4 ${action.color}`} />
+                  <div className={`rounded-lg p-2 ${ action.bgColor }`}>
+                    <Icon className={`h-4 w-4 ${ action.color }`} />
                   </div>
                   <div className="flex-1">
                     <h3 className="font-medium text-sm group-hover:text-foreground">{action.title}</h3>
