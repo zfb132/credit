@@ -38,6 +38,7 @@ import (
 	"github.com/linux-do/pay/internal/db"
 	"github.com/linux-do/pay/internal/model"
 	"github.com/linux-do/pay/internal/otel_trace"
+	"github.com/linux-do/pay/internal/util"
 	"go.opentelemetry.io/otel/codes"
 	"gorm.io/gorm"
 )
@@ -118,6 +119,7 @@ func doOAuth(ctx context.Context, code string) (*model.User, error) {
 				AvatarUrl:   userInfo.AvatarUrl,
 				IsActive:    userInfo.Active,
 				TrustLevel:  userInfo.TrustLevel,
+				SignKey:     util.GenerateUniqueIDSimple(),
 				LastLoginAt: time.Now(),
 			}
 			if err = db.DB(ctx).Create(&user).Error; err != nil {

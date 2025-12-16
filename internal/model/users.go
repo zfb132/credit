@@ -70,13 +70,13 @@ type UserGamificationScoreResponse struct {
 
 type User struct {
 	ID               uint64          `json:"id" gorm:"primaryKey"`
-	Username         string          `json:"username" gorm:"size:64;uniqueIndex;index"`
+	Username         string          `json:"username" gorm:"size:64;uniqueIndex"`
 	Nickname         string          `json:"nickname" gorm:"size:100"`
 	AvatarUrl        string          `json:"avatar_url" gorm:"size:100"`
 	TrustLevel       TrustLevel      `json:"trust_level" gorm:"index"`
 	PayScore         int64           `json:"pay_score" gorm:"default:0;index"`
 	PayKey           string          `json:"pay_key" gorm:"size:10;index"`
-	SignKey          string          `json:"sign_key" gorm:"size:64;uniqueIndex;index;not null"`
+	SignKey          string          `json:"sign_key" gorm:"size:64;uniqueIndex;not null"`
 	TotalReceive     decimal.Decimal `json:"total_receive" gorm:"type:numeric(20,2);default:0"`
 	TotalPayment     decimal.Decimal `json:"total_payment" gorm:"type:numeric(20,2);default:0"`
 	TotalTransfer    decimal.Decimal `json:"total_transfer" gorm:"type:numeric(20,2);default:0"`
@@ -166,6 +166,7 @@ func (u *User) MarkAsDeactivatedAndCreateNew(ctx context.Context, oauthInfo *OAu
 			AvatarUrl:   oauthInfo.AvatarUrl,
 			IsActive:    oauthInfo.Active,
 			TrustLevel:  oauthInfo.TrustLevel,
+			SignKey:     util.GenerateUniqueIDSimple(),
 			LastLoginAt: time.Now(),
 		}
 		if err := tx.Create(&newUser).Error; err != nil {
