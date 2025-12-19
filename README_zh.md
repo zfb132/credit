@@ -52,7 +52,7 @@ LINUX DO Credit 是一个为 Linux Do 社区打造的积分服务平台，旨在
 ## 🛠️ 技术栈
 
 ### 后端
-- **[Go 1.25.4](https://go.dev/doc)** - 主要开发语言
+- **[Go 1.25.5](https://go.dev/doc)** - 主要开发语言
 - **[GIN](https://github.com/gin-gonic/gin)** - Web 框架
 - **[GORM](https://github.com/go-gorm/gorm)** - ORM 框架
 - **[Redis](https://github.com/redis/redis)** - 缓存和会话存储
@@ -70,7 +70,7 @@ LINUX DO Credit 是一个为 Linux Do 社区打造的积分服务平台，旨在
 
 ## 📋 环境要求
 
-- **Go** >= 1.25.4
+- **Go** >= 1.25.5
 - **Node.js** >= 18.0
 - **PostgreSQL** >= 18
 - **Redis** >= 6.0

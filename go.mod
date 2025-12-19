@@ -1,6 +1,6 @@
 module github.com/linux-do/pay
 
-go 1.25.4
+go 1.25.5
 
 require (
 	github.com/gin-contrib/sessions v1.0.4

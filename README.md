@@ -52,7 +52,7 @@ LINUX DO Credit is a credit service platform built for the Linux Do community, a
 ## 🛠️ Tech Stack
 
 ### Backend
-- **[Go 1.25.4](https://go.dev/doc)** - Primary development language
+- **[Go 1.25.5](https://go.dev/doc)** - Primary development language
 - **[GIN](https://github.com/gin-gonic/gin)** - Web Framework
 - **[GORM](https://github.com/go-gorm/gorm)** - ORM Framework
 - **[Redis](https://github.com/redis/redis)** - Cache and session store
@@ -70,7 +70,7 @@ LINUX DO Credit is a credit service platform built for the Linux Do community, a
 
 ## 📋 Requirements
 
-- **Go** >= 1.25.4
+- **Go** >= 1.25.5
 - **Node.js** >= 18.0
 - **PostgreSQL** >= 18
 - **Redis** >= 6.0
