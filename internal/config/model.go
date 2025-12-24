@@ -51,10 +51,10 @@ type OAuth2Config struct {
 	ClientID              string `mapstructure:"client_id"`
 	ClientSecret          string `mapstructure:"client_secret"`
 	RedirectURI           string `mapstructure:"redirect_uri"`
-	Issuer                string `mapstructure:"issuer"` // OIDC Issuer URL，用于自动发现端点
+	Issuer                string `mapstructure:"issuer"`
 	AuthorizationEndpoint string `mapstructure:"authorization_endpoint"`
 	TokenEndpoint         string `mapstructure:"token_endpoint"`
-	UserEndpoint          string `mapstructure:"user_endpoint"` // 保留用于回退
+	UserEndpoint          string `mapstructure:"user_endpoint"`
 }
 
 // databaseConfig 数据库配置
