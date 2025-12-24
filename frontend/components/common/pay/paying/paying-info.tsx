@@ -98,7 +98,7 @@ function OrderContent({ orderInfo, forceMobile = false }: { orderInfo: GetMercha
           <p className="text-[10px] text-white/30 space-y-0.5 leading-relaxed">
             * 包含 {feeRate}% 的服务手续费 (由服务方承担)。
             <br />
-            服务手续费率根据服务方等级动态调整，不会消耗您（消费者）的积分。
+            服务手续费率根据服务方等级和平台活动动态调整，不会消耗您（消费者）的积分。
           </p>
         </div>
       </div>
