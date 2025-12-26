@@ -78,6 +78,8 @@ LINUX DO Credit is a credit service platform built for the Linux Do community, a
 
 ## 🚀 Quick Start
 
+Development environment quick start using Docker Compose, see [Development](./develop/README.md) for details.
+
 ### 1. Clone the Project
 
 ```bash
