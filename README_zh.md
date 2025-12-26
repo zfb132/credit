@@ -78,6 +78,8 @@ LINUX DO Credit 是一个为 Linux Do 社区打造的积分服务平台，旨在
 
 ## 🚀 快速开始
 
+使用 Docker Compose 快速启动开发环境，详见 [开发环境指南](./develop/README_zh.md)。
+
 ### 1. 克隆项目
 
 ```bash
